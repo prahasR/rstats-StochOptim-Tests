@@ -1,0 +1,142 @@
+---
+title: "Tests"
+output: github_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## Test 1
+Prepare R code for three of the unconstrained test functions in [GO Test Problems](http://www-optima.amp.i.kyoto-u.ac.jp/member/student/hedar/Hedar_files/TestGO.htm) that allow dimension greater than 4
+
+* **Rosenbrock**
+```{r}
+Rosenbrock<-function(x){
+	len<-length(x)
+	sum((100*(x[-len]^2-x[-1])^2) + (x[-len]-rep(1, len-1))^2)
+}
+
+#gradient function
+Rosenbrock.g<-function(x){
+  len<-length(x)
+  g<-rep(NA, len)
+  g[1]<- 2*(x[1]-1) + 400*x[1]*(x[1]^2-x[2])
+  g[2:(len-1)] <- 2*(x[2:(len-1)]-1) + 400*x[2:(len-1)]*(x[2:(len-1)]^2-x[2:(len-1) + 1]) + 200*(x[2:(len-1)]-x[2:(len-1) - 1]^2)
+  g[len] <- 200 * (x[len] - x[len - 1]^2)
+  g
+}
+Rosenbrock(c(1,2,3,4))
+```
+* **Sphere Func.**
+```{r}
+sphere<-function(x){
+	sum(x^2)
+}
+
+#gradient function
+sphere.g<-function(x){
+  len<-length(x)
+  g<-rep(NA, len)
+  g[1:len]<-2*x
+  g
+}
+
+sphere(c(1,2,3,4))
+```
+* **Sum square**
+```{r}
+sum_sq<-function(x){
+  len<-length(x)
+	sum(seq(1, len, length=len)*(x^2))
+}
+
+#gradient function
+sum_sq.g<-function(x){
+  len<-length(x)
+  g<-rep(NA, len)
+  g[1:len]<-seq(1, len, length=len)*2*x
+  g
+}
+
+sum_sq(c(1,2,3,4))
+```
+* **Dixon&Price**
+```{r}
+d_and_p<-function(x){
+	len<-length(x)
+	t1<-(x[1]-1)^2
+	t2<-sum(seq(2,len, length=len-1)*(2*x[-1]^2-x[-len])^2)
+	t1+t2
+}
+
+#gradient function
+d_and_p.g<-function(x){
+  len<-length(x)
+  g<-rep(NA, len)
+  g[1]<-2*(x[1]-1) - 4*(2*x[2]^2-x[1])
+  g[2:(len-1)]<- 8*seq(2,len-1, length=len-2)*x[2:(len-1)]*(2*x[2:(len-1)]^2-x[1:(len-2)]) - 2*seq(3,len, length=len-2)*(2*x[3:len]^2-x[2:(len-1)])
+  g[len]<-8*len*x[len]*(2*x[len]^2-x[len-1])
+  g
+}
+d_and_p(c(1,2,3,4))
+
+```
+
+## Test 2
+Try to minimize these with the base R **optim()** function. Be sure to document what you do.
+
+```{r}
+#Rosenbrock
+optm_1<-optim(c(1,2,3,4), Rosenbrock, Rosenbrock.g, method="BFGS")
+optm_1
+
+#sphere
+optm_2<-optim(c(1,2,3,4), sphere, sphere.g, method="CG")
+optm_2
+
+#Sum square
+optm_3<-optim(c(1,2,3,4), sum_sq, method="SANN")
+optm_3
+
+#dixon&price
+optm_4<-optim(c(1,2,3,4), d_and_p, method="Nelder-Mead")
+optm_4
+```
+
+## Test 3
+Run several (at least 4) solvers at once with the **opm()** function
+```{r}
+require(optimr)
+#Rosenbrock
+result1<-opm(c(1,2,3,4), Rosenbrock, Rosenbrock.g, method="ALL", control=list(kkt=FALSE, trace=0))
+result1
+
+#sphere
+result2<-opm(c(1,2,3,4), sphere, sphere.g, method="ALL", control=list(kkt=FALSE, trace=0))
+result2
+
+#sum_square
+result3<-opm(c(1,2,3,4), sum_sq, sum_sq.g, method="ALL", control=list(kkt=FALSE, trace=0))
+result3
+
+#dixon&price
+result4<-opm(c(1,2,3,4), d_and_p, d_and_p.g, method="ALL", control=list(kkt=FALSE, trace=0))
+result4
+```
+
+#### Observations from above Result
+* For problems which has quite significant scaling factor(Eg: Rosenbrock function), non gradient methods such as **Nelder-Mead** and **hjn** does large function evaluations to arrive at results.
+
+* For simpler problems such as Sphere function, **Nelder-Mead** and **hjn** requires relatively less number of evaluations as compared to Rosenbrock problem but still it is larger then as required by other gradient optimization methods for the same problem.
+
+* **CG** method reaches its iteration limit and does not able to find the minimum for the Rosenbrock function. Also it can be seen that this method takes relatively more function and gradient computations compared to other gradient methods.
+
+* **Rvmmin** method achieves better results compared to other methods and for the Rosenbrock problem **Rvmmin** comes up with the best accuracy.
+
+* **BFGS**, **L-BFGS-B** and **Rcgmin** are obtaining good results with less number of computaions envolved.
+
+#### Conlusion
+
+* For purpose of achieving better results we can use **L-BFGS-B**, **Rvmmin**, **BFGS** and **Rcgmin** by providing analytic gradient to these functions. These methods performs good even for large/difficult problems.
+
