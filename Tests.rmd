@@ -140,3 +140,22 @@ result4
 
 * For purpose of achieving better results we can use **L-BFGS-B**, **Rvmmin**, **BFGS** and **Rcgmin** by providing analytic gradient to these functions. These methods performs good even for large/difficult problems.
 
+##Test 4
+
+```{r}
+require(DEoptim)
+
+#Rosenbrock
+DEoptim_1 <- DEoptim(Rosenbrock, lower=c(-10,-10,-10), upper=c(10,10, 10), DEoptim.control(NP=40 ))
+plot(DEoptim_1)
+
+#sphere
+DEoptim_2 <- DEoptim(sphere, lower=c(-10,-10,-10), upper=c(10,10, 10), DEoptim.control(NP=40 , itermax=50))
+plot(DEoptim_2)
+```
+#### Why DEoptim ? 
+* **DEoptim** performs function evaluations repeadedly to reach to the better function/parameter values with each iteration.
+
+* The evalations can be performed at faster rate by running the package in parallel mode.
+
+* The output can be visualised easily using the plot method which makes it easy to read and understand. Also the maximum number of iterations to be performed can be changed according to the problem.
