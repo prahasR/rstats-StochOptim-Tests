@@ -13,8 +13,8 @@ Prepare R code for three of the unconstrained test functions in [GO Test Problem
 * **Rosenbrock**
 ```{r}
 Rosenbrock<-function(x){
-	len<-length(x)
-	sum((100*(x[-len]^2-x[-1])^2) + (x[-len]-rep(1, len-1))^2)
+  len<-length(x)
+  sum((100*(x[-len]^2-x[-1])^2) + (x[-len]-rep(1, len-1))^2)
 }
 
 #gradient function
@@ -31,7 +31,7 @@ Rosenbrock(c(1,2,3,4))
 * **Sphere Func.**
 ```{r}
 sphere<-function(x){
-	sum(x^2)
+  sum(x^2)
 }
 
 #gradient function
@@ -48,7 +48,7 @@ sphere(c(1,2,3,4))
 ```{r}
 sum_sq<-function(x){
   len<-length(x)
-	sum(seq(1, len, length=len)*(x^2))
+  sum(seq(1, len, length=len)*(x^2))
 }
 
 #gradient function
@@ -64,10 +64,10 @@ sum_sq(c(1,2,3,4))
 * **Dixon&Price**
 ```{r}
 d_and_p<-function(x){
-	len<-length(x)
-	t1<-(x[1]-1)^2
-	t2<-sum(seq(2,len, length=len-1)*(2*x[-1]^2-x[-len])^2)
-	t1+t2
+  len<-length(x)
+  t1<-(x[1]-1)^2
+  t2<-sum(seq(2,len, length=len-1)*(2*x[-1]^2-x[-len])^2)
+  t1+t2
 }
 
 #gradient function
@@ -108,6 +108,7 @@ optm_4
 Run several (at least 4) solvers at once with the **opm()** function
 ```{r}
 require(optimr)
+require(optextras)
 #Rosenbrock
 result1<-opm(c(1,2,3,4), Rosenbrock, Rosenbrock.g, method="ALL", control=list(kkt=FALSE, trace=0))
 result1
@@ -126,9 +127,9 @@ result4
 ```
 
 #### Observations from above Result
-* For problems which has quite significant scaling factor(Eg: Rosenbrock function), non gradient methods such as **Nelder-Mead** and **hjn** does large function evaluations to arrive at results.
+* For problems which has quite significant scaling factor(Eg: Rosenbrock function), non-gradient methods such as **Nelder-Mead** and **hjn** does large function evaluations to arrive at results.
 
-* For simpler problems such as Sphere function, **Nelder-Mead** and **hjn** requires relatively less number of evaluations as compared to Rosenbrock problem but still it is larger then as required by other gradient optimization methods for the same problem.
+* For simpler problems such as Sphere function, **Nelder-Mead** and **hjn** requires relatively less number of evaluations as compared to Rosenbrock problem but still number of evaluations involved is larger than compared to other gradient optimization methods for the same problem.
 
 * **CG** method reaches its iteration limit and does not able to find the minimum for the Rosenbrock function. Also it can be seen that this method takes relatively more function and gradient computations compared to other gradient methods.
 
@@ -138,24 +139,28 @@ result4
 
 #### Conlusion
 
-* For purpose of achieving better results we can use **L-BFGS-B**, **Rvmmin**, **BFGS** and **Rcgmin** by providing analytic gradient to these functions. These methods performs good even for large/difficult problems.
+* For purpose of achieving better results we can use **L-BFGS-B**, **Rvmmin**, **BFGS** and **Rcgmin** by providing analytic gradient to these methods. 
 
-##Test 4
-
+## Test 4
 ```{r}
 require(DEoptim)
 
 #Rosenbrock
-DEoptim_1 <- DEoptim(Rosenbrock, lower=c(-10,-10,-10), upper=c(10,10, 10), DEoptim.control(NP=40 ))
+set.seed(1231)
+DEoptim_1 <- DEoptim(Rosenbrock, lower=c(-10,-10,-10), upper=c(10,10, 10), DEoptim.control(NP=40))
 plot(DEoptim_1)
+```
 
+```{r}
 #sphere
-DEoptim_2 <- DEoptim(sphere, lower=c(-10,-10,-10), upper=c(10,10, 10), DEoptim.control(NP=40 , itermax=50))
+set.seed(1232)
+DEoptim_2 <- DEoptim(sphere, lower=c(-10,-10,-10), upper=c(10,10, 10), DEoptim.control(NP=40, itermax=50))
 plot(DEoptim_2)
 ```
 #### Why DEoptim ? 
-* **DEoptim** performs function evaluations repeadedly to reach to the better function/parameter values with each iteration.
+
+* **DEoptim** performs function evaluations repeatedly to reach at better function/parameter values with each iteration.
 
 * The evalations can be performed at faster rate by running the package in parallel mode.
 
-* The output can be visualised easily using the plot method which makes it easy to read and understand. Also the maximum number of iterations to be performed can be changed according to the problem.
+* Output can be visualised easily using the plot method which makes it easy to read and understand. Also the maximum number of iterations to be performed can be changed according to the problem.
