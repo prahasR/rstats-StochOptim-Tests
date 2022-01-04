@@ -7,6 +7,7 @@ output: github_document
 knitr::opts_chunk$set(echo = TRUE)
 ```
 
+
 ## Test 1
 Prepare R code for three of the unconstrained test functions in [GO Test Problems](http://www-optima.amp.i.kyoto-u.ac.jp/member/student/hedar/Hedar_files/TestGO.htm) that allow dimension greater than 4
 
@@ -66,7 +67,7 @@ sum_sq(c(1,2,3,4))
 d_and_p<-function(x){
   len<-length(x)
   t1<-(x[1]-1)^2
-  t2<-sum(seq(2,len, length=len-1)*(2*x[-1]^2-x[-len])^2)
+  t2<-sum(seq(2, len, length=len-1)*(2*x[-1]^2-x[-len])^2)
   t1+t2
 }
 
@@ -82,6 +83,7 @@ d_and_p.g<-function(x){
 d_and_p(c(1,2,3,4))
 
 ```
+
 
 ## Test 2
 Try to minimize these with the base R **optim()** function. Be sure to document what you do.
@@ -104,11 +106,11 @@ optm_4<-optim(c(1,2,3,4), d_and_p, method="Nelder-Mead")
 optm_4
 ```
 
+
 ## Test 3
 Run several (at least 4) solvers at once with the **opm()** function
 ```{r}
 require(optimr)
-require(optextras)
 #Rosenbrock
 result1<-opm(c(1,2,3,4), Rosenbrock, Rosenbrock.g, method="ALL", control=list(kkt=FALSE, trace=0))
 result1
@@ -129,7 +131,7 @@ result4
 #### Observations from above Result
 * For problems which has quite significant scaling factor(Eg: Rosenbrock function), non-gradient methods such as **Nelder-Mead** and **hjn** does large function evaluations to arrive at results.
 
-* For simpler problems such as Sphere function, **Nelder-Mead** and **hjn** requires relatively less number of evaluations as compared to Rosenbrock problem but still number of evaluations involved is larger than compared to other gradient optimization methods for the same problem.
+* For simpler problems such as Sphere function, **Nelder-Mead** and **hjn** requires relatively less number of evaluations as compared to Rosenbrock problem but still, the number of evaluations involved is larger than compared to gradient optimization methods for the same problem.
 
 * **CG** method reaches its iteration limit and does not able to find the minimum for the Rosenbrock function. Also it can be seen that this method takes relatively more function and gradient computations compared to other gradient methods.
 
@@ -140,23 +142,56 @@ result4
 #### Conlusion
 
 * For purpose of achieving better results we can use **L-BFGS-B**, **Rvmmin**, **BFGS** and **Rcgmin** by providing analytic gradient to these methods. 
+As **Nelder-Mead** and **hjn** do quite large number of function evaluations to arrive at results so we should not use them for optimizing difficult problems becuase they might hit the limit of function evaluations in such case.
 
 ## Test 4
+
+Choose at least three stochastic optimization solvers from the suggestions in Global and Stochastic Optimization section of the [CRAN Task View: Optimization and Mathematical Programming](https://cran.r-project.org/web/views/Optimization.html) and apply these to your test problems. 
+
+---
+
+#### DEoptim
+
 ```{r}
 require(DEoptim)
+```
 
+* **Rosenbrock**
+```{r}
 #Rosenbrock
 set.seed(1231)
 DEoptim_1 <- DEoptim(Rosenbrock, lower=c(-10,-10,-10), upper=c(10,10, 10), DEoptim.control(NP=40))
+#plot of the optimization process for rosenbrock function
 plot(DEoptim_1)
 ```
 
+* **Sphere**
 ```{r}
 #sphere
 set.seed(1232)
 DEoptim_2 <- DEoptim(sphere, lower=c(-10,-10,-10), upper=c(10,10, 10), DEoptim.control(NP=40, itermax=50))
+#plot of the optimization process for sphere function
 plot(DEoptim_2)
 ```
+
+* **Sum Square**
+```{r}
+#sum square
+set.seed(1233)
+DEoptim_3 <- DEoptim(sum_sq, lower=c(-10,-10,-10), upper=c(10,10, 10), DEoptim.control(NP=40, itermax=50))
+#plot of the optimization process for sum_square function
+plot(DEoptim_3)
+```
+
+* **Dixon&Price**
+```{r}
+#dixon&price
+set.seed(1234)
+DEoptim_4 <- DEoptim(d_and_p, lower=c(-10,-10,-10), upper=c(10,10, 10), DEoptim.control(NP=40, itermax=50))
+#plot of the optimization process for griewank function
+plot(DEoptim_4)
+```
+
 #### Why DEoptim ? 
 
 * **DEoptim** performs function evaluations repeatedly to reach at better function/parameter values with each iteration.
@@ -164,3 +199,50 @@ plot(DEoptim_2)
 * The evalations can be performed at faster rate by running the package in parallel mode.
 
 * Output can be visualised easily using the plot method which makes it easy to read and understand. Also the maximum number of iterations to be performed can be changed according to the problem.
+
+* If the function evaluates to **NA** or **NaN** value for any set of parameter then DEoptim stops iterating further. Although the issue can be resolved by defining our function in such a way that it returns Inf in place of NA.
+
+---
+
+#### ABCoptim
+
+```{r}
+require(ABCoptim)
+```
+
+* **Rosenbrock**
+```{r}
+#Rosenbrock
+ABCoptim_1 <- abc_optim(c(1,2,3), Rosenbrock, lb=-10, ub=10, criter=50, maxCycle=200)
+print(ABCoptim_1)
+plot(ABCoptim_1, main="Rosenbrock")
+```
+
+* **Sphere**
+```{r}
+#sphere
+ABCoptim_2 <- abc_optim(c(1,2,3), sphere, lb=-10, ub=10, criter=50)
+plot(ABCoptim_2, main="Sphere")
+```
+
+* **Sum Square**
+```{r}
+#sum_square
+ABCoptim_3 <- abc_optim(c(1,2,3), sum_sq, lb=-10, ub=10, criter=50)
+plot(ABCoptim_3, main="Sum Sqaure")
+```
+
+* **Dixon&price**
+```{r}
+#dixon&price
+ABCoptim_4 <- abc_optim(c(1,2,3), d_and_p, FoodNumber = 50, lb=-10, ub=10, criter=50)
+plot(ABCoptim_4, main="Dixon&Price")
+```
+
+#### Why ABCoptim ? 
+
+* **abc_optim** is an implementation of **ABC optimization algorithm**. The optimization can be done within less number of iteration if we increase the FoodNumber( i.e. number of food sources ).
+
+* The package also provides **abc_cpp** method which is a C++ implementation of the algorithm and is much more faster then apc_optim.
+
+* Like DEoptim, ABCoptim also provides plot method which makes it easy to visualize the optimization process.

@@ -76,7 +76,7 @@ sum_sq(c(1,2,3,4))
 d_and_p<-function(x){
   len<-length(x)
   t1<-(x[1]-1)^2
-  t2<-sum(seq(2,len, length=len-1)*(2*x[-1]^2-x[-len])^2)
+  t2<-sum(seq(2, len, length=len-1)*(2*x[-1]^2-x[-len])^2)
   t1+t2
 }
 
@@ -150,10 +150,10 @@ optm_3
 ```
 
     ## $par
-    ## [1] -0.03202012  0.01053891  0.07346168 -0.02363429
+    ## [1]  0.07681751 -0.05149727  0.03545904  0.01934951
     ## 
     ## $value
-    ## [1] 0.0196716
+    ## [1] 0.01647451
     ## 
     ## $counts
     ## function gradient 
@@ -198,19 +198,6 @@ require(optimr)
     ## Loading required package: optimr
 
 ``` r
-require(optextras)
-```
-
-    ## Loading required package: optextras
-
-    ## 
-    ## Attaching package: 'optextras'
-
-    ## The following object is masked from 'package:optimr':
-    ## 
-    ##     ctrldefault
-
-``` r
 #Rosenbrock
 result1<-opm(c(1,2,3,4), Rosenbrock, Rosenbrock.g, method="ALL", control=list(kkt=FALSE, trace=0))
 result1
@@ -229,13 +216,13 @@ result1
     ##             convergence kkt1 kkt2 xtime
     ## BFGS                  0   NA   NA 0.002
     ## CG                    1   NA   NA 0.016
-    ## Nelder-Mead           0   NA   NA 0.002
-    ## L-BFGS-B              0   NA   NA 0.001
+    ## Nelder-Mead           0   NA   NA 0.001
+    ## L-BFGS-B              0   NA   NA 0.000
     ## nlm                   0   NA   NA 0.002
     ## nlminb                0   NA   NA 0.002
     ## Rcgmin                0   NA   NA 0.003
     ## Rvmmin                0   NA   NA 0.004
-    ## hjn                   0   NA   NA 0.019
+    ## hjn                   0   NA   NA 0.018
 
 ``` r
 #sphere
@@ -260,15 +247,15 @@ result2
     ## Rvmmin        1.110223e-16   2.220446e-16  -2.220446e-16  -4.440892e-16
     ## hjn           0.000000e+00   0.000000e+00   0.000000e+00   0.000000e+00
     ##                    value fevals gevals convergence kkt1 kkt2 xtime
-    ## BFGS        2.179639e-30      5      3           0   NA   NA 0.001
+    ## BFGS        2.179639e-30      5      3           0   NA   NA 0.000
     ## CG          1.457834e-12     15      8           0   NA   NA 0.000
     ## Nelder-Mead 2.457878e-07    207     NA           0   NA   NA 0.001
-    ## L-BFGS-B    3.597681e-61      4      4           0   NA   NA 0.001
+    ## L-BFGS-B    3.597681e-61      4      4           0   NA   NA 0.000
     ## nlm         0.000000e+00     NA      1           0   NA   NA 0.000
-    ## nlminb      0.000000e+00     30     27           0   NA   NA 0.000
+    ## nlminb      0.000000e+00     30     27           0   NA   NA 0.001
     ## Rcgmin      1.247386e-29      4      2           0   NA   NA 0.000
     ## Rvmmin      3.081488e-31      4      3           2   NA   NA 0.000
-    ## hjn         0.000000e+00    128     NA           0   NA   NA 0.000
+    ## hjn         0.000000e+00    128     NA           0   NA   NA 0.001
 
 ``` r
 #sum_square
@@ -293,15 +280,15 @@ result3
     ## Rvmmin       -6.706204e-16  -6.761823e-16  -2.509268e-16  -2.508378e-15
     ## hjn           0.000000e+00   0.000000e+00   0.000000e+00   0.000000e+00
     ##                    value fevals gevals convergence kkt1 kkt2 xtime
-    ## BFGS        1.208497e-23     37     17           0   NA   NA 0.003
+    ## BFGS        1.208497e-23     37     17           0   NA   NA 0.004
     ## CG          3.823921e-13     51     21           0   NA   NA 0.000
-    ## Nelder-Mead 5.843035e-07    165     NA           0   NA   NA 0.001
-    ## L-BFGS-B    1.456900e-10     10     10           0   NA   NA 0.001
+    ## Nelder-Mead 5.843035e-07    165     NA           0   NA   NA 0.002
+    ## L-BFGS-B    1.456900e-10     10     10           0   NA   NA 0.000
     ## nlm         3.230721e-14     NA     11           0   NA   NA 0.002
     ## nlminb      0.000000e+00     55     49           0   NA   NA 0.001
     ## Rcgmin      6.146199e-32     10      5           0   NA   NA 0.001
     ## Rvmmin      2.672091e-29     20     16           0   NA   NA 0.002
-    ## hjn         0.000000e+00    128     NA           0   NA   NA 0.002
+    ## hjn         0.000000e+00    128     NA           0   NA   NA 0.001
 
 ``` r
 #dixon&price
@@ -322,13 +309,13 @@ result4
     ##             convergence kkt1 kkt2 xtime
     ## BFGS                  0   NA   NA 0.017
     ## CG                    0   NA   NA 0.003
-    ## Nelder-Mead           0   NA   NA 0.003
+    ## Nelder-Mead           0   NA   NA 0.004
     ## L-BFGS-B              0   NA   NA 0.001
     ## nlm                   0   NA   NA 0.002
     ## nlminb                0   NA   NA 0.001
-    ## Rcgmin                0   NA   NA 0.001
-    ## Rvmmin                0   NA   NA 0.002
-    ## hjn                   0   NA   NA 0.008
+    ## Rcgmin                0   NA   NA 0.002
+    ## Rvmmin                0   NA   NA 0.003
+    ## hjn                   0   NA   NA 0.010
 
 #### Observations from above Result
 
@@ -338,8 +325,8 @@ result4
 
 -   For simpler problems such as Sphere function, **Nelder-Mead** and
     **hjn** requires relatively less number of evaluations as compared
-    to Rosenbrock problem but still number of evaluations involved is
-    larger than compared to other gradient optimization methods for the
+    to Rosenbrock problem but still, the number of evaluations involved
+    is larger than compared to gradient optimization methods for the
     same problem.
 
 -   **CG** method reaches its iteration limit and does not able to find
@@ -358,9 +345,22 @@ result4
 
 -   For purpose of achieving better results we can use **L-BFGS-B**,
     **Rvmmin**, **BFGS** and **Rcgmin** by providing analytic gradient
-    to these methods.
+    to these methods. As **Nelder-Mead** and **hjn** do quite large
+    number of function evaluations to arrive at results so we should not
+    use them for optimizing difficult problems becuase they might hit
+    the limit of function evaluations in such case.
 
 ## Test 4
+
+Choose at least three stochastic optimization solvers from the
+suggestions in Global and Stochastic Optimization section of the [CRAN
+Task View: Optimization and Mathematical
+Programming](https://cran.r-project.org/web/views/Optimization.html) and
+apply these to your test problems.
+
+------------------------------------------------------------------------
+
+#### DEoptim
 
 ``` r
 require(DEoptim)
@@ -374,6 +374,8 @@ require(DEoptim)
     ## DEoptim package
     ## Differential Evolution algorithm in R
     ## Authors: D. Ardia, K. Mullen, B. Peterson and J. Ulrich
+
+-   **Rosenbrock**
 
 ``` r
 #Rosenbrock
@@ -583,10 +585,13 @@ DEoptim_1 <- DEoptim(Rosenbrock, lower=c(-10,-10,-10), upper=c(10,10, 10), DEopt
     ## Iteration: 200 bestvalit: 0.000001 bestmemit:    1.000077    1.000171    1.000253
 
 ``` r
+#plot of the optimization process for rosenbrock function
 plot(DEoptim_1)
 ```
 
-![](Tests_files/figure-gfm/unnamed-chunk-7-1.png)<!-- -->![](Tests_files/figure-gfm/unnamed-chunk-7-2.png)<!-- -->
+![](Tests_files/figure-gfm/unnamed-chunk-8-2.png)<!-- -->
+
+-   **Sphere**
 
 ``` r
 #sphere
@@ -646,10 +651,145 @@ DEoptim_2 <- DEoptim(sphere, lower=c(-10,-10,-10), upper=c(10,10, 10), DEoptim.c
     ## Iteration: 50 bestvalit: 0.000000 bestmemit:    0.000189   -0.000000    0.000095
 
 ``` r
+#plot of the optimization process for sphere function
 plot(DEoptim_2)
 ```
 
-![](Tests_files/figure-gfm/unnamed-chunk-8-1.png)<!-- -->![](Tests_files/figure-gfm/unnamed-chunk-8-2.png)<!-- -->
+![](Tests_files/figure-gfm/unnamed-chunk-9-2.png)<!-- -->
+
+
+-   **Sum Square**
+
+``` r
+#sum square
+set.seed(1233)
+DEoptim_3 <- DEoptim(sum_sq, lower=c(-10,-10,-10), upper=c(10,10, 10), DEoptim.control(NP=40, itermax=50))
+```
+
+    ## Iteration: 1 bestvalit: 2.346816 bestmemit:    0.748773    0.661379    0.551153
+    ## Iteration: 2 bestvalit: 2.346816 bestmemit:    0.748773    0.661379    0.551153
+    ## Iteration: 3 bestvalit: 2.346816 bestmemit:    0.748773    0.661379    0.551153
+    ## Iteration: 4 bestvalit: 1.385563 bestmemit:    0.409542   -0.755395    0.159788
+    ## Iteration: 5 bestvalit: 1.385563 bestmemit:    0.409542   -0.755395    0.159788
+    ## Iteration: 6 bestvalit: 1.385563 bestmemit:    0.409542   -0.755395    0.159788
+    ## Iteration: 7 bestvalit: 0.586563 bestmemit:    0.409542    0.413668    0.159788
+    ## Iteration: 8 bestvalit: 0.194618 bestmemit:    0.410530    0.091784    0.055482
+    ## Iteration: 9 bestvalit: 0.194618 bestmemit:    0.410530    0.091784    0.055482
+    ## Iteration: 10 bestvalit: 0.041501 bestmemit:    0.078908   -0.075156   -0.089401
+    ## Iteration: 11 bestvalit: 0.041501 bestmemit:    0.078908   -0.075156   -0.089401
+    ## Iteration: 12 bestvalit: 0.041501 bestmemit:    0.078908   -0.075156   -0.089401
+    ## Iteration: 13 bestvalit: 0.041501 bestmemit:    0.078908   -0.075156   -0.089401
+    ## Iteration: 14 bestvalit: 0.041501 bestmemit:    0.078908   -0.075156   -0.089401
+    ## Iteration: 15 bestvalit: 0.041501 bestmemit:    0.078908   -0.075156   -0.089401
+    ## Iteration: 16 bestvalit: 0.041501 bestmemit:    0.078908   -0.075156   -0.089401
+    ## Iteration: 17 bestvalit: 0.041501 bestmemit:    0.078908   -0.075156   -0.089401
+    ## Iteration: 18 bestvalit: 0.028041 bestmemit:   -0.121174   -0.014476   -0.065672
+    ## Iteration: 19 bestvalit: 0.028041 bestmemit:   -0.121174   -0.014476   -0.065672
+    ## Iteration: 20 bestvalit: 0.015939 bestmemit:    0.075784    0.021917    0.055482
+    ## Iteration: 21 bestvalit: 0.015939 bestmemit:    0.075784    0.021917    0.055482
+    ## Iteration: 22 bestvalit: 0.009471 bestmemit:    0.038261   -0.014476    0.050294
+    ## Iteration: 23 bestvalit: 0.001058 bestmemit:    0.013751    0.011574    0.014159
+    ## Iteration: 24 bestvalit: 0.001058 bestmemit:    0.013751    0.011574    0.014159
+    ## Iteration: 25 bestvalit: 0.001058 bestmemit:    0.013751    0.011574    0.014159
+    ## Iteration: 26 bestvalit: 0.001058 bestmemit:    0.013751    0.011574    0.014159
+    ## Iteration: 27 bestvalit: 0.001058 bestmemit:    0.013751    0.011574    0.014159
+    ## Iteration: 28 bestvalit: 0.001058 bestmemit:    0.013751    0.011574    0.014159
+    ## Iteration: 29 bestvalit: 0.001058 bestmemit:    0.013751    0.011574    0.014159
+    ## Iteration: 30 bestvalit: 0.001058 bestmemit:    0.013751    0.011574    0.014159
+    ## Iteration: 31 bestvalit: 0.001058 bestmemit:    0.013751    0.011574    0.014159
+    ## Iteration: 32 bestvalit: 0.000910 bestmemit:    0.029140   -0.003770    0.003303
+    ## Iteration: 33 bestvalit: 0.000910 bestmemit:    0.029140   -0.003770    0.003303
+    ## Iteration: 34 bestvalit: 0.000892 bestmemit:   -0.011157   -0.007014   -0.014939
+    ## Iteration: 35 bestvalit: 0.000246 bestmemit:    0.013591   -0.003770    0.003303
+    ## Iteration: 36 bestvalit: 0.000127 bestmemit:   -0.010481    0.000318    0.002394
+    ## Iteration: 37 bestvalit: 0.000018 bestmemit:   -0.004070   -0.000390   -0.000720
+    ## Iteration: 38 bestvalit: 0.000018 bestmemit:   -0.004070   -0.000390   -0.000720
+    ## Iteration: 39 bestvalit: 0.000018 bestmemit:   -0.004070   -0.000390   -0.000720
+    ## Iteration: 40 bestvalit: 0.000018 bestmemit:   -0.004070   -0.000390   -0.000720
+    ## Iteration: 41 bestvalit: 0.000018 bestmemit:   -0.004070   -0.000390   -0.000720
+    ## Iteration: 42 bestvalit: 0.000018 bestmemit:   -0.004070   -0.000390   -0.000720
+    ## Iteration: 43 bestvalit: 0.000018 bestmemit:   -0.004070   -0.000390   -0.000720
+    ## Iteration: 44 bestvalit: 0.000013 bestmemit:    0.001629   -0.002174    0.000450
+    ## Iteration: 45 bestvalit: 0.000013 bestmemit:    0.001629   -0.002174    0.000450
+    ## Iteration: 46 bestvalit: 0.000013 bestmemit:    0.001629   -0.002174    0.000450
+    ## Iteration: 47 bestvalit: 0.000007 bestmemit:   -0.001523    0.000751   -0.001070
+    ## Iteration: 48 bestvalit: 0.000004 bestmemit:   -0.001841   -0.000183   -0.000201
+    ## Iteration: 49 bestvalit: 0.000004 bestmemit:   -0.001841   -0.000183   -0.000201
+    ## Iteration: 50 bestvalit: 0.000004 bestmemit:   -0.001841   -0.000183   -0.000201
+
+``` r
+#plot of the optimization process for sum_square function
+plot(DEoptim_3)
+```
+
+![](Tests_files/figure-gfm/unnamed-chunk-10-2.png)<!-- -->
+
+-   **Dixon&Price**
+
+``` r
+#dixon&price
+set.seed(1234)
+DEoptim_4 <- DEoptim(d_and_p, lower=c(-10,-10,-10), upper=c(10,10, 10), DEoptim.control(NP=40, itermax=50))
+```
+
+    ## Iteration: 1 bestvalit: 63.519670 bestmemit:    6.626901    1.319336   -1.289379
+    ## Iteration: 2 bestvalit: 63.519670 bestmemit:    6.626901    1.319336   -1.289379
+    ## Iteration: 3 bestvalit: 63.519670 bestmemit:    6.626901    1.319336   -1.289379
+    ## Iteration: 4 bestvalit: 8.546650 bestmemit:   -0.770965    0.013502   -0.774465
+    ## Iteration: 5 bestvalit: 8.546650 bestmemit:   -0.770965    0.013502   -0.774465
+    ## Iteration: 6 bestvalit: 8.546650 bestmemit:   -0.770965    0.013502   -0.774465
+    ## Iteration: 7 bestvalit: 8.546650 bestmemit:   -0.770965    0.013502   -0.774465
+    ## Iteration: 8 bestvalit: 1.532689 bestmemit:    1.314040    0.758864   -0.200361
+    ## Iteration: 9 bestvalit: 0.190456 bestmemit:    1.314040    0.758864    0.567721
+    ## Iteration: 10 bestvalit: 0.190456 bestmemit:    1.314040    0.758864    0.567721
+    ## Iteration: 11 bestvalit: 0.190456 bestmemit:    1.314040    0.758864    0.567721
+    ## Iteration: 12 bestvalit: 0.190456 bestmemit:    1.314040    0.758864    0.567721
+    ## Iteration: 13 bestvalit: 0.190456 bestmemit:    1.314040    0.758864    0.567721
+    ## Iteration: 14 bestvalit: 0.190456 bestmemit:    1.314040    0.758864    0.567721
+    ## Iteration: 15 bestvalit: 0.190456 bestmemit:    1.314040    0.758864    0.567721
+    ## Iteration: 16 bestvalit: 0.190456 bestmemit:    1.314040    0.758864    0.567721
+    ## Iteration: 17 bestvalit: 0.092510 bestmemit:    0.696443    0.585244    0.538243
+    ## Iteration: 18 bestvalit: 0.040941 bestmemit:    0.951791    0.737264   -0.596446
+    ## Iteration: 19 bestvalit: 0.040941 bestmemit:    0.951791    0.737264   -0.596446
+    ## Iteration: 20 bestvalit: 0.040941 bestmemit:    0.951791    0.737264   -0.596446
+    ## Iteration: 21 bestvalit: 0.040941 bestmemit:    0.951791    0.737264   -0.596446
+    ## Iteration: 22 bestvalit: 0.040941 bestmemit:    0.951791    0.737264   -0.596446
+    ## Iteration: 23 bestvalit: 0.040941 bestmemit:    0.951791    0.737264   -0.596446
+    ## Iteration: 24 bestvalit: 0.040941 bestmemit:    0.951791    0.737264   -0.596446
+    ## Iteration: 25 bestvalit: 0.040941 bestmemit:    0.951791    0.737264   -0.596446
+    ## Iteration: 26 bestvalit: 0.040941 bestmemit:    0.951791    0.737264   -0.596446
+    ## Iteration: 27 bestvalit: 0.040941 bestmemit:    0.951791    0.737264   -0.596446
+    ## Iteration: 28 bestvalit: 0.040941 bestmemit:    0.951791    0.737264   -0.596446
+    ## Iteration: 29 bestvalit: 0.040941 bestmemit:    0.951791    0.737264   -0.596446
+    ## Iteration: 30 bestvalit: 0.040941 bestmemit:    0.951791    0.737264   -0.596446
+    ## Iteration: 31 bestvalit: 0.040941 bestmemit:    0.951791    0.737264   -0.596446
+    ## Iteration: 32 bestvalit: 0.040941 bestmemit:    0.951791    0.737264   -0.596446
+    ## Iteration: 33 bestvalit: 0.040941 bestmemit:    0.951791    0.737264   -0.596446
+    ## Iteration: 34 bestvalit: 0.040941 bestmemit:    0.951791    0.737264   -0.596446
+    ## Iteration: 35 bestvalit: 0.040941 bestmemit:    0.951791    0.737264   -0.596446
+    ## Iteration: 36 bestvalit: 0.037140 bestmemit:    0.997439    0.751015   -0.599708
+    ## Iteration: 37 bestvalit: 0.018295 bestmemit:    0.986512    0.704419   -0.559851
+    ## Iteration: 38 bestvalit: 0.016022 bestmemit:    1.059073    0.751015   -0.599708
+    ## Iteration: 39 bestvalit: 0.016022 bestmemit:    1.059073    0.751015   -0.599708
+    ## Iteration: 40 bestvalit: 0.008449 bestmemit:    0.917018    0.667357   -0.580995
+    ## Iteration: 41 bestvalit: 0.001647 bestmemit:    0.986512    0.704419   -0.584316
+    ## Iteration: 42 bestvalit: 0.001410 bestmemit:    1.007968    0.704419   -0.586285
+    ## Iteration: 43 bestvalit: 0.001158 bestmemit:    1.004185    0.704419   -0.586285
+    ## Iteration: 44 bestvalit: 0.001158 bestmemit:    1.004185    0.704419   -0.586285
+    ## Iteration: 45 bestvalit: 0.000597 bestmemit:    1.018041    0.717523   -0.599153
+    ## Iteration: 46 bestvalit: 0.000597 bestmemit:    1.018041    0.717523   -0.599153
+    ## Iteration: 47 bestvalit: 0.000597 bestmemit:    1.018041    0.717523   -0.599153
+    ## Iteration: 48 bestvalit: 0.000597 bestmemit:    1.018041    0.717523   -0.599153
+    ## Iteration: 49 bestvalit: 0.000597 bestmemit:    1.018041    0.717523   -0.599153
+    ## Iteration: 50 bestvalit: 0.000397 bestmemit:    0.989883    0.707446   -0.596446
+
+``` r
+#plot of the optimization process for griewank function
+plot(DEoptim_4)
+```
+
+![](Tests_files/figure-gfm/unnamed-chunk-11-2.png)<!-- -->
+
 #### Why DEoptim ?
 
 -   **DEoptim** performs function evaluations repeatedly to reach at
@@ -661,3 +801,89 @@ plot(DEoptim_2)
 -   Output can be visualised easily using the plot method which makes it
     easy to read and understand. Also the maximum number of iterations
     to be performed can be changed according to the problem.
+
+-   If the function evaluates to **NA** or **NaN** value for any set of
+    parameter then DEoptim stops iterating further. Although the issue
+    can be resolved by defining our function in such a way that it
+    returns Inf in place of NA.
+
+------------------------------------------------------------------------
+
+#### ABCoptim
+
+``` r
+require(ABCoptim)
+```
+
+    ## Loading required package: ABCoptim
+
+-   **Rosenbrock**
+
+``` r
+#Rosenbrock
+ABCoptim_1 <- abc_optim(c(1,2,3), Rosenbrock, lb=-10, ub=10, criter=50, maxCycle=200)
+print(ABCoptim_1)
+```
+
+    ## 
+    ##  An object of class -abc_answer- (Artificial Bee Colony Optim.):
+    ##  par:
+    ##     x[1]:  1.017795
+    ##     x[2]:  1.032270
+    ##     x[3]:  1.073939
+    ## 
+    ##  value:
+    ##            0.009666
+    ## 
+    ##  counts:
+    ##            119
+
+``` r
+plot(ABCoptim_1, main="Rosenbrock")
+```
+
+![](Tests_files/figure-gfm/unnamed-chunk-13-1.png)<!-- -->
+
+-   **Sphere**
+
+``` r
+#sphere
+ABCoptim_2 <- abc_optim(c(1,2,3), sphere, lb=-10, ub=10, criter=50)
+plot(ABCoptim_2, main="Sphere")
+```
+
+![](Tests_files/figure-gfm/unnamed-chunk-14-1.png)<!-- -->
+
+-   **Sum Square**
+
+``` r
+#sum_square
+ABCoptim_3 <- abc_optim(c(1,2,3), sum_sq, lb=-10, ub=10, criter=50)
+plot(ABCoptim_3, main="Sum Sqaure")
+```
+
+![](Tests_files/figure-gfm/unnamed-chunk-15-1.png)<!-- -->
+
+-   **Dixon&price**
+
+``` r
+#dixon&price
+ABCoptim_4 <- abc_optim(c(1,2,3), d_and_p, FoodNumber = 50, lb=-10, ub=10, criter=50)
+plot(ABCoptim_4, main="Dixon&Price")
+```
+
+![](Tests_files/figure-gfm/unnamed-chunk-16-1.png)<!-- -->
+
+#### Why ABCoptim ?
+
+-   **abc_optim** is an implementation of **ABC optimization
+    algorithm**. The optimization can be done within less number of
+    iteration if we increase the FoodNumber( i.e. number of food sources
+    ).
+
+-   The package also provides **abc_cpp** method which is a C++
+    implementation of the algorithm and is much more faster then
+    apc_optim.
+
+-   Like DEoptim, ABCoptim also provides plot method which makes it easy
+    to visualize the optimization process.
