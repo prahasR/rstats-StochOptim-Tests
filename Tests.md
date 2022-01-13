@@ -33,7 +33,11 @@ Rosenbrock(c(1,2,3,4))
 
 ``` r
 sphere<-function(x){
-  sum(x^2)
+  sp<-sum(x^2)
+  if(is.na(sp)){
+    sp<-Inf
+  } 
+  sp
 }
 
 #gradient function
@@ -54,7 +58,9 @@ sphere(c(1,2,3,4))
 ``` r
 sum_sq<-function(x){
   len<-length(x)
-  sum(seq(1, len, length=len)*(x^2))
+  ans <- sum(seq(1, len, length=len)*(x^2))
+  if(is.na(ans)) ans <- Inf
+  ans
 }
 
 #gradient function
@@ -150,10 +156,10 @@ optm_3
 ```
 
     ## $par
-    ## [1]  0.07681751 -0.05149727  0.03545904  0.01934951
+    ## [1]  0.05599090 -0.05893331  0.04607681 -0.03796380
     ## 
     ## $value
-    ## [1] 0.01647451
+    ## [1] 0.02221547
     ## 
     ## $counts
     ## function gradient 
@@ -215,11 +221,11 @@ result1
     ## hjn         1.0000006 1.0000012 1.0000024 1.0000047 8.483011e-12   3500     NA
     ##             convergence kkt1 kkt2 xtime
     ## BFGS                  0   NA   NA 0.002
-    ## CG                    1   NA   NA 0.016
-    ## Nelder-Mead           0   NA   NA 0.001
+    ## CG                    1   NA   NA 0.015
+    ## Nelder-Mead           0   NA   NA 0.002
     ## L-BFGS-B              0   NA   NA 0.000
     ## nlm                   0   NA   NA 0.002
-    ## nlminb                0   NA   NA 0.002
+    ## nlminb                0   NA   NA 0.001
     ## Rcgmin                0   NA   NA 0.003
     ## Rvmmin                0   NA   NA 0.004
     ## hjn                   0   NA   NA 0.018
@@ -227,12 +233,6 @@ result1
 ``` r
 #sphere
 result2<-opm(c(1,2,3,4), sphere, sphere.g, method="ALL", control=list(kkt=FALSE, trace=0))
-```
-
-    ## Warning in nlminb(start = spar, objective = efn, gradient = egr, lower =
-    ## slower, : NA/NaN function evaluation
-
-``` r
 result2
 ```
 
@@ -249,10 +249,10 @@ result2
     ##                    value fevals gevals convergence kkt1 kkt2 xtime
     ## BFGS        2.179639e-30      5      3           0   NA   NA 0.000
     ## CG          1.457834e-12     15      8           0   NA   NA 0.000
-    ## Nelder-Mead 2.457878e-07    207     NA           0   NA   NA 0.001
-    ## L-BFGS-B    3.597681e-61      4      4           0   NA   NA 0.000
+    ## Nelder-Mead 2.457878e-07    207     NA           0   NA   NA 0.000
+    ## L-BFGS-B    3.597681e-61      4      4           0   NA   NA 0.001
     ## nlm         0.000000e+00     NA      1           0   NA   NA 0.000
-    ## nlminb      0.000000e+00     30     27           0   NA   NA 0.001
+    ## nlminb      0.000000e+00     30     27           0   NA   NA 0.000
     ## Rcgmin      1.247386e-29      4      2           0   NA   NA 0.000
     ## Rvmmin      3.081488e-31      4      3           2   NA   NA 0.000
     ## hjn         0.000000e+00    128     NA           0   NA   NA 0.001
@@ -260,12 +260,6 @@ result2
 ``` r
 #sum_square
 result3<-opm(c(1,2,3,4), sum_sq, sum_sq.g, method="ALL", control=list(kkt=FALSE, trace=0))
-```
-
-    ## Warning in nlminb(start = spar, objective = efn, gradient = egr, lower =
-    ## slower, : NA/NaN function evaluation
-
-``` r
 result3
 ```
 
@@ -280,15 +274,15 @@ result3
     ## Rvmmin       -6.706204e-16  -6.761823e-16  -2.509268e-16  -2.508378e-15
     ## hjn           0.000000e+00   0.000000e+00   0.000000e+00   0.000000e+00
     ##                    value fevals gevals convergence kkt1 kkt2 xtime
-    ## BFGS        1.208497e-23     37     17           0   NA   NA 0.004
-    ## CG          3.823921e-13     51     21           0   NA   NA 0.000
+    ## BFGS        1.208497e-23     37     17           0   NA   NA 0.003
+    ## CG          3.823921e-13     51     21           0   NA   NA 0.001
     ## Nelder-Mead 5.843035e-07    165     NA           0   NA   NA 0.002
-    ## L-BFGS-B    1.456900e-10     10     10           0   NA   NA 0.000
-    ## nlm         3.230721e-14     NA     11           0   NA   NA 0.002
-    ## nlminb      0.000000e+00     55     49           0   NA   NA 0.001
+    ## L-BFGS-B    1.456900e-10     10     10           0   NA   NA 0.001
+    ## nlm         3.230721e-14     NA     11           0   NA   NA 0.003
+    ## nlminb      0.000000e+00     55     49           0   NA   NA 0.002
     ## Rcgmin      6.146199e-32     10      5           0   NA   NA 0.001
-    ## Rvmmin      2.672091e-29     20     16           0   NA   NA 0.002
-    ## hjn         0.000000e+00    128     NA           0   NA   NA 0.001
+    ## Rvmmin      2.672091e-29     20     16           0   NA   NA 0.001
+    ## hjn         0.000000e+00    128     NA           0   NA   NA 0.002
 
 ``` r
 #dixon&price
@@ -307,15 +301,15 @@ result4
     ## Rvmmin      1.0000000 0.7071068 0.5946036 -0.5452539 3.821045e-29     37     27
     ## hjn         1.0000001 0.7071068 0.5946036  0.5452539 5.463278e-14    660     NA
     ##             convergence kkt1 kkt2 xtime
-    ## BFGS                  0   NA   NA 0.017
+    ## BFGS                  0   NA   NA 0.018
     ## CG                    0   NA   NA 0.003
     ## Nelder-Mead           0   NA   NA 0.004
     ## L-BFGS-B              0   NA   NA 0.001
-    ## nlm                   0   NA   NA 0.002
+    ## nlm                   0   NA   NA 0.001
     ## nlminb                0   NA   NA 0.001
     ## Rcgmin                0   NA   NA 0.002
     ## Rvmmin                0   NA   NA 0.003
-    ## hjn                   0   NA   NA 0.010
+    ## hjn                   0   NA   NA 0.009
 
 #### Observations from above Result
 
@@ -343,7 +337,7 @@ result4
 
 #### Conlusion
 
--   For purpose of achieving better results we can use **L-BFGS-B**,
+-   For the purpose of achieving better results we can use **L-BFGS-B**,
     **Rvmmin**, **BFGS** and **Rcgmin** by providing analytic gradient
     to these methods. As **Nelder-Mead** and **hjn** do quite large
     number of function evaluations to arrive at results so we should not
@@ -360,7 +354,7 @@ apply these to your test problems.
 
 ------------------------------------------------------------------------
 
-#### DEoptim
+### 1. DEoptim
 
 ``` r
 require(DEoptim)
@@ -657,7 +651,6 @@ plot(DEoptim_2)
 
 ![](Tests_files/figure-gfm/unnamed-chunk-9-2.png)<!-- -->
 
-
 -   **Sum Square**
 
 ``` r
@@ -784,7 +777,7 @@ DEoptim_4 <- DEoptim(d_and_p, lower=c(-10,-10,-10), upper=c(10,10, 10), DEoptim.
     ## Iteration: 50 bestvalit: 0.000397 bestmemit:    0.989883    0.707446   -0.596446
 
 ``` r
-#plot of the optimization process for griewank function
+#plot of the optimization process for dixon&price function
 plot(DEoptim_4)
 ```
 
@@ -809,7 +802,7 @@ plot(DEoptim_4)
 
 ------------------------------------------------------------------------
 
-#### ABCoptim
+### 2. ABCoptim
 
 ``` r
 require(ABCoptim)
@@ -887,3 +880,226 @@ plot(ABCoptim_4, main="Dixon&Price")
 
 -   Like DEoptim, ABCoptim also provides plot method which makes it easy
     to visualize the optimization process.
+
+------------------------------------------------------------------------
+
+### 3. Rgenoud
+
+``` r
+require(rgenoud)
+```
+
+    ## Loading required package: rgenoud
+
+    ## ##  rgenoud (Version 5.8-3.0, Build Date: 2019-01-22)
+    ## ##  See http://sekhon.berkeley.edu/rgenoud for additional documentation.
+    ## ##  Please cite software as:
+    ## ##   Walter Mebane, Jr. and Jasjeet S. Sekhon. 2011.
+    ## ##   ``Genetic Optimization Using Derivatives: The rgenoud package for R.''
+    ## ##   Journal of Statistical Software, 42(11): 1-26. 
+    ## ##
+
+-   **Rosenbrock**
+
+``` r
+#Rosenbrock
+genoud_1 <- genoud(fn=Rosenbrock, pop.size=2000, nvars=4, starting.values=matrix(1:4, ncol=4), wait.generation=20, print.level=0 )
+genoud_1
+```
+
+    ## $value
+    ## [1] 9.338559e-08
+    ## 
+    ## $par
+    ## [1] 0.9999329 0.9998665 0.9997336 0.9994673
+    ## 
+    ## $gradients
+    ## [1] -4.001018e-04 -3.997974e-04 -3.997097e-04 -1.029086e-07
+    ## 
+    ## $generations
+    ## [1] 22
+    ## 
+    ## $peakgeneration
+    ## [1] 1
+    ## 
+    ## $popsize
+    ## [1] 2000
+    ## 
+    ## $operators
+    ## [1] 249 250 250 250 250 250 250 250   0
+
+-   **Sphere**
+
+``` r
+#sphere
+genoud_2 <- genoud(fn=sphere, pop.size=2000, nvars=4, starting.values=matrix(1:4, ncol=4), wait.generation=20, print.level=0)
+genoud_2
+```
+
+    ## $value
+    ## [1] 3.822482e-31
+    ## 
+    ## $par
+    ## [1] -4.063599e-16 -3.493849e-16  1.554155e-16 -2.662632e-16
+    ## 
+    ## $gradients
+    ## [1] -8.127210e-16 -6.987683e-16  3.108307e-16 -5.325268e-16
+    ## 
+    ## $generations
+    ## [1] 22
+    ## 
+    ## $peakgeneration
+    ## [1] 1
+    ## 
+    ## $popsize
+    ## [1] 2000
+    ## 
+    ## $operators
+    ## [1] 249 250 250 250 250 250 250 250   0
+
+-   **Sum Square**
+
+``` r
+#sum_square
+genoud_3 <- genoud(fn=sum_sq, pop.size=2000, nvars=4, starting.values=matrix(1:4, ncol=4), wait.generation=20, print.level=0)
+genoud_3
+```
+
+    ## $value
+    ## [1] 4.056231e-32
+    ## 
+    ## $par
+    ## [1] -1.953432e-16 -9.352409e-20  9.625583e-19  2.449771e-17
+    ## 
+    ## $gradients
+    ## [1] -3.906858e-16 -3.722313e-19  5.774522e-18  1.959856e-16
+    ## 
+    ## $generations
+    ## [1] 22
+    ## 
+    ## $peakgeneration
+    ## [1] 1
+    ## 
+    ## $popsize
+    ## [1] 2000
+    ## 
+    ## $operators
+    ## [1] 249 250 250 250 250 250 250 250   0
+
+-   **Dixon&price**
+
+``` r
+#dixon&price
+genoud_4 <- genoud(fn=d_and_p, pop.size=2000, nvars=4,starting.values=matrix(1:4, ncol=4), wait.generation=20, print.level=0 )
+genoud_4
+```
+
+    ## $value
+    ## [1] 7.926027e-11
+    ## 
+    ## $par
+    ## [1] 0.9999945 0.7071042 0.5946011 0.5452521
+    ## 
+    ## $gradients
+    ## [1] -3.285809e-06 -1.818542e-06 -3.596430e-05 -2.520846e-05
+    ## 
+    ## $generations
+    ## [1] 22
+    ## 
+    ## $peakgeneration
+    ## [1] 1
+    ## 
+    ## $popsize
+    ## [1] 2000
+    ## 
+    ## $operators
+    ## [1] 249 250 250 250 250 250 250 250   0
+
+#### Why rgenoud?
+
+-   **rgenoud** provides **genoud** function that works on evolutionary
+    algorithm. The function provides a wide range of arguments to
+    monitor the optimization process. And compared to derivative based
+    optimization methods, **genoud** is much more effective.
+
+-   **genoud** function even works for problems for which the derivative
+    information does not exist.
+
+-   The function allows users to set arguments such as **pop.size**(i.e
+    initial population size that the function will use for implementing
+    evolutionary algorithm), **max.generation** and
+    **wait.generation**(i.e limit on the number of generation that would
+    take place while execution of evolutionary algorithm) so that
+    optimization results in more accurate solution.
+
+------------------------------------------------------------------------
+
+## Task5
+
+Prepare R code for the volcano function of two parameters b=c(x,y) that
+is defined as f(d) = (10 - 0.5(d)) + sin(2\*d) where d is the square
+norm distance from x=1, y=5. What are the likely issues in minimizing
+this function over the two dimensions? A \[3D\] perspective plot may
+help you. Do solvers have trouble getting sensible results for this
+function?
+
+``` r
+volcano<-function(x){
+  # make x a matrix so this function works for plotting and for optimizing 
+  x <- matrix(x, ncol=2)
+  d<-apply(x,1,function(y){ (y[1]-1)^2 + (y[2]-5)^2 })
+  ans<-((10 - 0.5*d) + sin(2*d))
+  ans
+}
+
+x <- seq(-50, 50, length = 101)
+y <- seq(-50, 50, length = 101)
+X <- as.matrix(expand.grid(x,y))
+colnames(X) <- c("x", "y")
+# evaluate function
+z <- volcano(X)
+
+df <- data.frame(X, z)
+# plot the function
+library(lattice)
+wireframe(z ~ x * y , data=df, main = "Plot of volcano function", shade = TRUE, scales = list(arrows = FALSE), screen = list(z = -50, x = -70))
+```
+
+![](Tests_files/figure-gfm/unnamed-chunk-22-1.png)<!-- -->
+
+``` r
+#using opm solvers for volcano function
+result1<-opm(c(0,0), volcano, method=c("L-BFGS-B", "Nelder-Mead", "CG", "Rcgmin", "Rvmmin","BFGS"), control=list(kkt=FALSE, trace=0))
+result1
+```
+
+    ##                        p1            p2         value fevals gevals convergence
+    ## L-BFGS-B    -1.935518e-01 -9.678714e-01 -9.488273e+00     13     13           0
+    ## Nelder-Mead -6.297067e-02  1.684581e-01 -3.205087e+00     45     NA           0
+    ## CG           3.851191e+13 -1.094680e+14 -6.733210e+27     67     31           0
+    ## Rcgmin       0.000000e+00  0.000000e+00 -2.013372e+00      1      1           0
+    ## Rvmmin       0.000000e+00  0.000000e+00 -2.013372e+00      1      1           2
+    ## BFGS        -1.639873e+00 -8.213043e+00 -8.174490e+01     15      6           0
+    ##             kkt1 kkt2 xtime
+    ## L-BFGS-B      NA   NA 0.007
+    ## Nelder-Mead   NA   NA 0.001
+    ## CG            NA   NA 0.004
+    ## Rcgmin        NA   NA 0.000
+    ## Rvmmin        NA   NA 0.001
+    ## BFGS          NA   NA 0.001
+
+#### Issues while optimizing Volcano function.
+
+-   The plot indicates that the function acquires its minimum value at
+    infinite. Optimization of such functions might give wrong solutions
+    as it is giving with different opm solvers. Also most of the
+    optimization solvers in R requires boundaries to be defined for the
+    parameters, and for the volcano function choosing a boundary is not
+    much convenient.
+
+-   Some of the solvers(**ABCoptim**) tend to assign **NA/NaN** value to
+    the parameter “x”(passed to volcano function) during the
+    optimization process which results in **Warning: NA/NaN function
+    evaluation** and they keep on producing the same warning until the
+    iteration limit is reached and in the end they provide a wrong
+    solution.

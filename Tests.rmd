@@ -32,7 +32,11 @@ Rosenbrock(c(1,2,3,4))
 * **Sphere Func.**
 ```{r}
 sphere<-function(x){
-  sum(x^2)
+  sp<-sum(x^2)
+  if(is.na(sp)){
+    sp<-Inf
+  } 
+  sp
 }
 
 #gradient function
@@ -49,7 +53,9 @@ sphere(c(1,2,3,4))
 ```{r}
 sum_sq<-function(x){
   len<-length(x)
-  sum(seq(1, len, length=len)*(x^2))
+  ans <- sum(seq(1, len, length=len)*(x^2))
+  if(is.na(ans)) ans <- Inf
+  ans
 }
 
 #gradient function
@@ -141,7 +147,7 @@ result4
 
 #### Conlusion
 
-* For purpose of achieving better results we can use **L-BFGS-B**, **Rvmmin**, **BFGS** and **Rcgmin** by providing analytic gradient to these methods. 
+* For the purpose of achieving better results we can use **L-BFGS-B**, **Rvmmin**, **BFGS** and **Rcgmin** by providing analytic gradient to these methods. 
 As **Nelder-Mead** and **hjn** do quite large number of function evaluations to arrive at results so we should not use them for optimizing difficult problems becuase they might hit the limit of function evaluations in such case.
 
 ## Test 4
@@ -150,7 +156,7 @@ Choose at least three stochastic optimization solvers from the suggestions in Gl
 
 ---
 
-#### DEoptim
+### 1. DEoptim
 
 ```{r}
 require(DEoptim)
@@ -188,7 +194,7 @@ plot(DEoptim_3)
 #dixon&price
 set.seed(1234)
 DEoptim_4 <- DEoptim(d_and_p, lower=c(-10,-10,-10), upper=c(10,10, 10), DEoptim.control(NP=40, itermax=50))
-#plot of the optimization process for griewank function
+#plot of the optimization process for dixon&price function
 plot(DEoptim_4)
 ```
 
@@ -204,7 +210,7 @@ plot(DEoptim_4)
 
 ---
 
-#### ABCoptim
+### 2. ABCoptim
 
 ```{r}
 require(ABCoptim)
@@ -246,3 +252,86 @@ plot(ABCoptim_4, main="Dixon&Price")
 * The package also provides **abc_cpp** method which is a C++ implementation of the algorithm and is much more faster then apc_optim.
 
 * Like DEoptim, ABCoptim also provides plot method which makes it easy to visualize the optimization process.
+
+---
+
+### 3. Rgenoud
+
+```{r}
+require(rgenoud)
+```
+
+* **Rosenbrock**
+```{r}
+#Rosenbrock
+genoud_1 <- genoud(fn=Rosenbrock, pop.size=2000, nvars=4, starting.values=matrix(1:4, ncol=4), wait.generation=20, print.level=0 )
+genoud_1
+```
+
+* **Sphere**
+```{r}
+#sphere
+genoud_2 <- genoud(fn=sphere, pop.size=2000, nvars=4, starting.values=matrix(1:4, ncol=4), wait.generation=20, print.level=0)
+genoud_2
+```
+
+* **Sum Square**
+```{r}
+#sum_square
+genoud_3 <- genoud(fn=sum_sq, pop.size=2000, nvars=4, starting.values=matrix(1:4, ncol=4), wait.generation=20, print.level=0)
+genoud_3
+```
+
+* **Dixon&price**
+```{r}
+#dixon&price
+genoud_4 <- genoud(fn=d_and_p, pop.size=2000, nvars=4,starting.values=matrix(1:4, ncol=4), wait.generation=20, print.level=0 )
+genoud_4
+``` 
+
+#### Why rgenoud?
+
+* **rgenoud** provides **genoud** function that works on evolutionary algorithm. The function provides a wide range of arguments to monitor the optimization process. And compared to derivative based optimization methods, **genoud** is much more effective.
+
+* **genoud** function even works for problems for which the derivative information does not exist. 
+
+* The function allows users to set arguments such as **pop.size**(i.e initial population size that the function will use for implementing evolutionary algorithm), **max.generation** and **wait.generation**(i.e limit on the number of generation that would take place while execution of evolutionary algorithm) so that optimization results in more accurate solution.
+
+---
+
+## Task5
+
+Prepare R code for the volcano function of two parameters b=c(x,y) that is defined as f(d) = (10 - 0.5(d)) + sin(2*d) where d is the square norm distance from x=1, y=5.
+What are the likely issues in minimizing this function over the two dimensions? A [3D] perspective plot may help you. Do solvers have trouble getting sensible results for this function?
+
+```{r}
+volcano<-function(x){
+  # make x a matrix so this function works for plotting and for optimizing 
+  x <- matrix(x, ncol=2)
+  d<-apply(x,1,function(y){ (y[1]-1)^2 + (y[2]-5)^2 })
+  ans<-((10 - 0.5*d) + sin(2*d))
+  ans
+}
+
+x <- seq(-50, 50, length = 101)
+y <- seq(-50, 50, length = 101)
+X <- as.matrix(expand.grid(x,y))
+colnames(X) <- c("x", "y")
+# evaluate function
+z <- volcano(X)
+
+df <- data.frame(X, z)
+# plot the function
+library(lattice)
+wireframe(z ~ x * y , data=df, main = "Plot of volcano function", shade = TRUE, scales = list(arrows = FALSE), screen = list(z = -50, x = -70))
+
+#using opm solvers for volcano function
+result1<-opm(c(0,0), volcano, method=c("L-BFGS-B", "Nelder-Mead", "CG", "Rcgmin", "Rvmmin","BFGS"), control=list(kkt=FALSE, trace=0))
+result1
+```
+
+#### Issues while optimizing Volcano function.
+
+* The plot indicates that the function acquires its minimum value at infinite. Optimization of such functions might give wrong solutions as it is giving with different opm solvers. Also most of the optimization solvers in R requires boundaries to be defined for the parameters, and for the volcano function choosing a boundary is not much convenient.
+
+* Some of the solvers(**ABCoptim**) tend to assign **NA/NaN** value to the parameter "x"(passed to volcano function) during the optimization process which results in **Warning: NA/NaN function evaluation** and they keep on producing the same warning until the iteration limit is reached and in the end they provide a wrong solution.
