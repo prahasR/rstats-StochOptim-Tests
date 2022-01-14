@@ -143,12 +143,14 @@ result4
 
 * **Rvmmin** method achieves better results compared to other methods and for the Rosenbrock problem **Rvmmin** comes up with the best accuracy.
 
-* **BFGS**, **L-BFGS-B** and **Rcgmin** are obtaining good results with less number of computaions envolved.
+* **BFGS**, **L-BFGS-B** and **Rcgmin** are obtaining good results with less number of computations involved.
+
+* **nlminb** sometimes provide **NA/NaN** value as parameter "x" to the function(**Sphere**, **Sum Square**) during the optimization process. Also it should be noted that nlminb is obtaining much closer values of parameters to the exact solution as compared to the parameter values obtained by other solvers.
 
 #### Conlusion
 
-* For the purpose of achieving better results we can use **L-BFGS-B**, **Rvmmin**, **BFGS** and **Rcgmin** by providing analytic gradient to these methods. 
-As **Nelder-Mead** and **hjn** do quite large number of function evaluations to arrive at results so we should not use them for optimizing difficult problems becuase they might hit the limit of function evaluations in such case.
+* For the purpose of achieving better results we can use **L-BFGS-B**, **Rvmmin**,**nlminb**, **BFGS** and **Rcgmin** by providing analytic gradient to these methods. It could happen that **nlminb** might provide **NA** values as parameters to the objective function but this could be handled separately by defining our objective functon such that it output Inf in place of NA.
+* As **Nelder-Mead** and **hjn** do quite large number of function evaluations to arrive at results so we should not use them for optimizing difficult problems because they might hit the limit of function evaluations in such case.
 
 ## Test 4
 
@@ -306,7 +308,6 @@ What are the likely issues in minimizing this function over the two dimensions? 
 
 ```{r}
 volcano<-function(x){
-  # make x a matrix so this function works for plotting and for optimizing 
   x <- matrix(x, ncol=2)
   d<-apply(x,1,function(y){ (y[1]-1)^2 + (y[2]-5)^2 })
   ans<-((10 - 0.5*d) + sin(2*d))
@@ -332,6 +333,6 @@ result1
 
 #### Issues while optimizing Volcano function.
 
-* The plot indicates that the function acquires its minimum value at infinite. Optimization of such functions might give wrong solutions as it is giving with different opm solvers. Also most of the optimization solvers in R requires boundaries to be defined for the parameters, and for the volcano function choosing a boundary is not much convenient.
+* The plot indicates that the function acquires its minimum value at infinite. Optimization of such functions might give wrong solutions as it is giving with different **opm** solvers( although the convergence code is 0 ). Also most of the optimization solvers in R requires boundaries to be defined for the parameters, and for the volcano function choosing a boundary is not much convenient.
 
 * Some of the solvers(**ABCoptim**) tend to assign **NA/NaN** value to the parameter "x"(passed to volcano function) during the optimization process which results in **Warning: NA/NaN function evaluation** and they keep on producing the same warning until the iteration limit is reached and in the end they provide a wrong solution.

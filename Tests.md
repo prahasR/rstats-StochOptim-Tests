@@ -156,10 +156,10 @@ optm_3
 ```
 
     ## $par
-    ## [1]  0.05599090 -0.05893331  0.04607681 -0.03796380
+    ## [1]  0.02453263  0.01749540  0.05315667 -0.01133963
     ## 
     ## $value
-    ## [1] 0.02221547
+    ## [1] 0.01020527
     ## 
     ## $counts
     ## function gradient 
@@ -223,12 +223,12 @@ result1
     ## BFGS                  0   NA   NA 0.002
     ## CG                    1   NA   NA 0.015
     ## Nelder-Mead           0   NA   NA 0.002
-    ## L-BFGS-B              0   NA   NA 0.000
-    ## nlm                   0   NA   NA 0.002
+    ## L-BFGS-B              0   NA   NA 0.001
+    ## nlm                   0   NA   NA 0.001
     ## nlminb                0   NA   NA 0.001
     ## Rcgmin                0   NA   NA 0.003
     ## Rvmmin                0   NA   NA 0.004
-    ## hjn                   0   NA   NA 0.018
+    ## hjn                   0   NA   NA 0.019
 
 ``` r
 #sphere
@@ -247,15 +247,15 @@ result2
     ## Rvmmin        1.110223e-16   2.220446e-16  -2.220446e-16  -4.440892e-16
     ## hjn           0.000000e+00   0.000000e+00   0.000000e+00   0.000000e+00
     ##                    value fevals gevals convergence kkt1 kkt2 xtime
-    ## BFGS        2.179639e-30      5      3           0   NA   NA 0.000
-    ## CG          1.457834e-12     15      8           0   NA   NA 0.000
+    ## BFGS        2.179639e-30      5      3           0   NA   NA 0.001
+    ## CG          1.457834e-12     15      8           0   NA   NA 0.001
     ## Nelder-Mead 2.457878e-07    207     NA           0   NA   NA 0.000
-    ## L-BFGS-B    3.597681e-61      4      4           0   NA   NA 0.001
+    ## L-BFGS-B    3.597681e-61      4      4           0   NA   NA 0.000
     ## nlm         0.000000e+00     NA      1           0   NA   NA 0.000
     ## nlminb      0.000000e+00     30     27           0   NA   NA 0.000
-    ## Rcgmin      1.247386e-29      4      2           0   NA   NA 0.000
+    ## Rcgmin      1.247386e-29      4      2           0   NA   NA 0.001
     ## Rvmmin      3.081488e-31      4      3           2   NA   NA 0.000
-    ## hjn         0.000000e+00    128     NA           0   NA   NA 0.001
+    ## hjn         0.000000e+00    128     NA           0   NA   NA 0.000
 
 ``` r
 #sum_square
@@ -279,9 +279,9 @@ result3
     ## Nelder-Mead 5.843035e-07    165     NA           0   NA   NA 0.002
     ## L-BFGS-B    1.456900e-10     10     10           0   NA   NA 0.001
     ## nlm         3.230721e-14     NA     11           0   NA   NA 0.003
-    ## nlminb      0.000000e+00     55     49           0   NA   NA 0.002
+    ## nlminb      0.000000e+00     55     49           0   NA   NA 0.001
     ## Rcgmin      6.146199e-32     10      5           0   NA   NA 0.001
-    ## Rvmmin      2.672091e-29     20     16           0   NA   NA 0.001
+    ## Rvmmin      2.672091e-29     20     16           0   NA   NA 0.002
     ## hjn         0.000000e+00    128     NA           0   NA   NA 0.002
 
 ``` r
@@ -303,12 +303,12 @@ result4
     ##             convergence kkt1 kkt2 xtime
     ## BFGS                  0   NA   NA 0.018
     ## CG                    0   NA   NA 0.003
-    ## Nelder-Mead           0   NA   NA 0.004
+    ## Nelder-Mead           0   NA   NA 0.003
     ## L-BFGS-B              0   NA   NA 0.001
-    ## nlm                   0   NA   NA 0.001
+    ## nlm                   0   NA   NA 0.002
     ## nlminb                0   NA   NA 0.001
     ## Rcgmin                0   NA   NA 0.002
-    ## Rvmmin                0   NA   NA 0.003
+    ## Rvmmin                0   NA   NA 0.002
     ## hjn                   0   NA   NA 0.009
 
 #### Observations from above Result
@@ -333,16 +333,26 @@ result4
     accuracy.
 
 -   **BFGS**, **L-BFGS-B** and **Rcgmin** are obtaining good results
-    with less number of computaions envolved.
+    with less number of computations involved.
+
+-   **nlminb** sometimes provide **NA/NaN** value as parameter “x” to
+    the function(**Sphere**, **Sum Square**) during the optimization
+    process. Also it should be noted that nlminb is obtaining much
+    closer values of parameters to the exact solution as compared to the
+    parameter values obtained by other solvers.
 
 #### Conlusion
 
 -   For the purpose of achieving better results we can use **L-BFGS-B**,
-    **Rvmmin**, **BFGS** and **Rcgmin** by providing analytic gradient
-    to these methods. As **Nelder-Mead** and **hjn** do quite large
-    number of function evaluations to arrive at results so we should not
-    use them for optimizing difficult problems becuase they might hit
-    the limit of function evaluations in such case.
+    **Rvmmin**,**nlminb**, **BFGS** and **Rcgmin** by providing analytic
+    gradient to these methods. It could happen that **nlminb** might
+    provide **NA** values as parameters to the objective function but
+    this could be handled separately by defining our objective functon
+    such that it output Inf in place of NA.
+-   As **Nelder-Mead** and **hjn** do quite large number of function
+    evaluations to arrive at results so we should not use them for
+    optimizing difficult problems because they might hit the limit of
+    function evaluations in such case.
 
 ## Test 4
 
@@ -583,7 +593,7 @@ DEoptim_1 <- DEoptim(Rosenbrock, lower=c(-10,-10,-10), upper=c(10,10, 10), DEopt
 plot(DEoptim_1)
 ```
 
-![](Tests_files/figure-gfm/unnamed-chunk-8-2.png)<!-- -->
+![](Tests_files/figure-gfm/unnamed-chunk-8-1.png)<!-- -->![](Tests_files/figure-gfm/unnamed-chunk-8-2.png)<!-- -->
 
 -   **Sphere**
 
@@ -649,7 +659,7 @@ DEoptim_2 <- DEoptim(sphere, lower=c(-10,-10,-10), upper=c(10,10, 10), DEoptim.c
 plot(DEoptim_2)
 ```
 
-![](Tests_files/figure-gfm/unnamed-chunk-9-2.png)<!-- -->
+![](Tests_files/figure-gfm/unnamed-chunk-9-1.png)<!-- -->![](Tests_files/figure-gfm/unnamed-chunk-9-2.png)<!-- -->
 
 -   **Sum Square**
 
@@ -715,7 +725,7 @@ DEoptim_3 <- DEoptim(sum_sq, lower=c(-10,-10,-10), upper=c(10,10, 10), DEoptim.c
 plot(DEoptim_3)
 ```
 
-![](Tests_files/figure-gfm/unnamed-chunk-10-2.png)<!-- -->
+![](Tests_files/figure-gfm/unnamed-chunk-10-1.png)<!-- -->![](Tests_files/figure-gfm/unnamed-chunk-10-2.png)<!-- -->
 
 -   **Dixon&Price**
 
@@ -781,7 +791,7 @@ DEoptim_4 <- DEoptim(d_and_p, lower=c(-10,-10,-10), upper=c(10,10, 10), DEoptim.
 plot(DEoptim_4)
 ```
 
-![](Tests_files/figure-gfm/unnamed-chunk-11-2.png)<!-- -->
+![](Tests_files/figure-gfm/unnamed-chunk-11-1.png)<!-- -->![](Tests_files/figure-gfm/unnamed-chunk-11-2.png)<!-- -->
 
 #### Why DEoptim ?
 
@@ -1045,7 +1055,6 @@ function?
 
 ``` r
 volcano<-function(x){
-  # make x a matrix so this function works for plotting and for optimizing 
   x <- matrix(x, ncol=2)
   d<-apply(x,1,function(y){ (y[1]-1)^2 + (y[2]-5)^2 })
   ans<-((10 - 0.5*d) + sin(2*d))
@@ -1081,21 +1090,21 @@ result1
     ## Rvmmin       0.000000e+00  0.000000e+00 -2.013372e+00      1      1           2
     ## BFGS        -1.639873e+00 -8.213043e+00 -8.174490e+01     15      6           0
     ##             kkt1 kkt2 xtime
-    ## L-BFGS-B      NA   NA 0.007
+    ## L-BFGS-B      NA   NA 0.008
     ## Nelder-Mead   NA   NA 0.001
-    ## CG            NA   NA 0.004
+    ## CG            NA   NA 0.003
     ## Rcgmin        NA   NA 0.000
-    ## Rvmmin        NA   NA 0.001
+    ## Rvmmin        NA   NA 0.000
     ## BFGS          NA   NA 0.001
 
 #### Issues while optimizing Volcano function.
 
 -   The plot indicates that the function acquires its minimum value at
     infinite. Optimization of such functions might give wrong solutions
-    as it is giving with different opm solvers. Also most of the
-    optimization solvers in R requires boundaries to be defined for the
-    parameters, and for the volcano function choosing a boundary is not
-    much convenient.
+    as it is giving with different **opm** solvers( although the
+    convergence code is 0 ). Also most of the optimization solvers in R
+    requires boundaries to be defined for the parameters, and for the
+    volcano function choosing a boundary is not much convenient.
 
 -   Some of the solvers(**ABCoptim**) tend to assign **NA/NaN** value to
     the parameter “x”(passed to volcano function) during the
