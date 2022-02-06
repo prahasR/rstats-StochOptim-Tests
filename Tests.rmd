@@ -367,7 +367,10 @@ df <- data.frame(X, z)
 # plot the function
 library(lattice)
 wireframe(z ~ x * y , data=df, main = "Plot of volcano function", shade = TRUE, scales = list(arrows = FALSE), screen = list(z = -50, x = -70))
+```
 
+#### Trying to Optimise Volcano Function using opm.
+```{r}
 #using opm solvers for volcano function
 result1<-opm(c(0,0), volcano, method=c("L-BFGS-B", "Nelder-Mead", "CG", "Rcgmin", "Rvmmin","BFGS"), control=list(kkt=FALSE, trace=0))
 result1

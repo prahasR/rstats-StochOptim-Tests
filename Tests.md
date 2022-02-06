@@ -156,10 +156,10 @@ optm_3
 ```
 
     ## $par
-    ## [1]  0.03332764 -0.05306280  0.04734184  0.01764977
+    ## [1]  0.097806709 -0.047306129 -0.007213247  0.019075634
     ## 
     ## $value
-    ## [1] 0.01471186
+    ## [1] 0.0156535
     ## 
     ## $counts
     ## function gradient 
@@ -225,8 +225,8 @@ result1
     ## Nelder-Mead           0   NA   NA 0.002
     ## L-BFGS-B              0   NA   NA 0.001
     ## nlm                   0   NA   NA 0.001
-    ## nlminb                0   NA   NA 0.001
-    ## Rcgmin                0   NA   NA 0.003
+    ## nlminb                0   NA   NA 0.002
+    ## Rcgmin                0   NA   NA 0.002
     ## Rvmmin                0   NA   NA 0.004
     ## hjn                   0   NA   NA 0.019
 
@@ -248,14 +248,14 @@ result2
     ## hjn           0.000000e+00   0.000000e+00   0.000000e+00   0.000000e+00
     ##                    value fevals gevals convergence kkt1 kkt2 xtime
     ## BFGS        2.179639e-30      5      3           0   NA   NA 0.000
-    ## CG          1.457834e-12     15      8           0   NA   NA 0.000
-    ## Nelder-Mead 2.457878e-07    207     NA           0   NA   NA 0.001
+    ## CG          1.457834e-12     15      8           0   NA   NA 0.001
+    ## Nelder-Mead 2.457878e-07    207     NA           0   NA   NA 0.000
     ## L-BFGS-B    3.597681e-61      4      4           0   NA   NA 0.000
-    ## nlm         0.000000e+00     NA      1           0   NA   NA 0.000
+    ## nlm         0.000000e+00     NA      1           0   NA   NA 0.001
     ## nlminb      0.000000e+00     30     27           0   NA   NA 0.000
-    ## Rcgmin      1.247386e-29      4      2           0   NA   NA 0.001
-    ## Rvmmin      3.081488e-31      4      3           2   NA   NA 0.000
-    ## hjn         0.000000e+00    128     NA           0   NA   NA 0.000
+    ## Rcgmin      1.247386e-29      4      2           0   NA   NA 0.000
+    ## Rvmmin      3.081488e-31      4      3           2   NA   NA 0.001
+    ## hjn         0.000000e+00    128     NA           0   NA   NA 0.001
 
 ``` r
 #sum_square
@@ -274,12 +274,12 @@ result3
     ## Rvmmin       -6.706204e-16  -6.761823e-16  -2.509268e-16  -2.508378e-15
     ## hjn           0.000000e+00   0.000000e+00   0.000000e+00   0.000000e+00
     ##                    value fevals gevals convergence kkt1 kkt2 xtime
-    ## BFGS        1.208497e-23     37     17           0   NA   NA 0.003
+    ## BFGS        1.208497e-23     37     17           0   NA   NA 0.004
     ## CG          3.823921e-13     51     21           0   NA   NA 0.001
     ## Nelder-Mead 5.843035e-07    165     NA           0   NA   NA 0.002
-    ## L-BFGS-B    1.456900e-10     10     10           0   NA   NA 0.000
+    ## L-BFGS-B    1.456900e-10     10     10           0   NA   NA 0.001
     ## nlm         3.230721e-14     NA     11           0   NA   NA 0.002
-    ## nlminb      0.000000e+00     55     49           0   NA   NA 0.001
+    ## nlminb      0.000000e+00     55     49           0   NA   NA 0.002
     ## Rcgmin      6.146199e-32     10      5           0   NA   NA 0.001
     ## Rvmmin      2.672091e-29     20     16           0   NA   NA 0.001
     ## hjn         0.000000e+00    128     NA           0   NA   NA 0.002
@@ -303,13 +303,13 @@ result4
     ##             convergence kkt1 kkt2 xtime
     ## BFGS                  0   NA   NA 0.017
     ## CG                    0   NA   NA 0.003
-    ## Nelder-Mead           0   NA   NA 0.003
+    ## Nelder-Mead           0   NA   NA 0.004
     ## L-BFGS-B              0   NA   NA 0.001
     ## nlm                   0   NA   NA 0.002
     ## nlminb                0   NA   NA 0.001
-    ## Rcgmin                0   NA   NA 0.002
-    ## Rvmmin                0   NA   NA 0.002
-    ## hjn                   0   NA   NA 0.010
+    ## Rcgmin                0   NA   NA 0.001
+    ## Rvmmin                0   NA   NA 0.003
+    ## hjn                   0   NA   NA 0.009
 
 #### Observations from above Result
 
@@ -1137,6 +1137,8 @@ wireframe(z ~ x * y , data=df, main = "Plot of volcano function", shade = TRUE, 
 
 ![](Tests_files/figure-gfm/unnamed-chunk-24-1.png)<!-- -->
 
+#### Trying to Optimise Volcano Function using opm.
+
 ``` r
 #using opm solvers for volcano function
 result1<-opm(c(0,0), volcano, method=c("L-BFGS-B", "Nelder-Mead", "CG", "Rcgmin", "Rvmmin","BFGS"), control=list(kkt=FALSE, trace=0))
@@ -1154,9 +1156,9 @@ result1
     ## L-BFGS-B      NA   NA 0.008
     ## Nelder-Mead   NA   NA 0.001
     ## CG            NA   NA 0.004
-    ## Rcgmin        NA   NA 0.001
-    ## Rvmmin        NA   NA 0.001
-    ## BFGS          NA   NA 0.001
+    ## Rcgmin        NA   NA 0.000
+    ## Rvmmin        NA   NA 0.000
+    ## BFGS          NA   NA 0.000
 
 #### Issues while optimizing Volcano function.
 
