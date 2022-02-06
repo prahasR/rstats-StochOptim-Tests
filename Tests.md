@@ -1,4 +1,4 @@
-Tests
+StochOptim: A R Wrapper for stocastic Optimisation
 ================
 
 ## Test 1
@@ -7,7 +7,7 @@ Prepare R code for three of the unconstrained test functions in [GO Test
 Problems](http://www-optima.amp.i.kyoto-u.ac.jp/member/student/hedar/Hedar_files/TestGO.htm)
 that allow dimension greater than 4
 
--   **Rosenbrock**
+-   **Rosenbrock Function**
 
 ``` r
 Rosenbrock<-function(x){
@@ -15,7 +15,7 @@ Rosenbrock<-function(x){
   sum((100*(x[-len]^2-x[-1])^2) + (x[-len]-rep(1, len-1))^2)
 }
 
-#gradient function
+#gradient function for Rosenbrock function
 Rosenbrock.g<-function(x){
   len<-length(x)
   g<-rep(NA, len)
@@ -29,7 +29,7 @@ Rosenbrock(c(1,2,3,4))
 
     ## [1] 2705
 
--   **Sphere Func.**
+-   **Sphere Function**
 
 ``` r
 sphere<-function(x){
@@ -40,7 +40,7 @@ sphere<-function(x){
   sp
 }
 
-#gradient function
+#gradient function for sphere function
 sphere.g<-function(x){
   len<-length(x)
   g<-rep(NA, len)
@@ -53,7 +53,7 @@ sphere(c(1,2,3,4))
 
     ## [1] 30
 
--   **Sum square**
+-   **Sum Squares Function**
 
 ``` r
 sum_sq<-function(x){
@@ -63,7 +63,7 @@ sum_sq<-function(x){
   ans
 }
 
-#gradient function
+#gradient function for sum square function
 sum_sq.g<-function(x){
   len<-length(x)
   g<-rep(NA, len)
@@ -76,7 +76,7 @@ sum_sq(c(1,2,3,4))
 
     ## [1] 100
 
--   **Dixon&Price**
+-   **Dixon&Price Function**
 
 ``` r
 d_and_p<-function(x){
@@ -86,7 +86,7 @@ d_and_p<-function(x){
   t1+t2
 }
 
-#gradient function
+#gradient function for dixon&price function
 d_and_p.g<-function(x){
   len<-length(x)
   g<-rep(NA, len)
@@ -156,10 +156,10 @@ optm_3
 ```
 
     ## $par
-    ## [1]  0.02453263  0.01749540  0.05315667 -0.01133963
+    ## [1]  0.025162199 -0.016209370  0.001396527  0.027957730
     ## 
     ## $value
-    ## [1] 0.01020527
+    ## [1] 0.004291013
     ## 
     ## $counts
     ## function gradient 
@@ -223,7 +223,7 @@ result1
     ## BFGS                  0   NA   NA 0.002
     ## CG                    1   NA   NA 0.015
     ## Nelder-Mead           0   NA   NA 0.002
-    ## L-BFGS-B              0   NA   NA 0.001
+    ## L-BFGS-B              0   NA   NA 0.000
     ## nlm                   0   NA   NA 0.001
     ## nlminb                0   NA   NA 0.001
     ## Rcgmin                0   NA   NA 0.003
@@ -247,15 +247,15 @@ result2
     ## Rvmmin        1.110223e-16   2.220446e-16  -2.220446e-16  -4.440892e-16
     ## hjn           0.000000e+00   0.000000e+00   0.000000e+00   0.000000e+00
     ##                    value fevals gevals convergence kkt1 kkt2 xtime
-    ## BFGS        2.179639e-30      5      3           0   NA   NA 0.001
-    ## CG          1.457834e-12     15      8           0   NA   NA 0.001
-    ## Nelder-Mead 2.457878e-07    207     NA           0   NA   NA 0.000
-    ## L-BFGS-B    3.597681e-61      4      4           0   NA   NA 0.000
-    ## nlm         0.000000e+00     NA      1           0   NA   NA 0.000
-    ## nlminb      0.000000e+00     30     27           0   NA   NA 0.000
-    ## Rcgmin      1.247386e-29      4      2           0   NA   NA 0.001
-    ## Rvmmin      3.081488e-31      4      3           2   NA   NA 0.000
-    ## hjn         0.000000e+00    128     NA           0   NA   NA 0.000
+    ## BFGS        2.179639e-30      5      3           0   NA   NA     0
+    ## CG          1.457834e-12     15      8           0   NA   NA     0
+    ## Nelder-Mead 2.457878e-07    207     NA           0   NA   NA     0
+    ## L-BFGS-B    3.597681e-61      4      4           0   NA   NA     0
+    ## nlm         0.000000e+00     NA      1           0   NA   NA     0
+    ## nlminb      0.000000e+00     30     27           0   NA   NA     0
+    ## Rcgmin      1.247386e-29      4      2           0   NA   NA     0
+    ## Rvmmin      3.081488e-31      4      3           2   NA   NA     0
+    ## hjn         0.000000e+00    128     NA           0   NA   NA     0
 
 ``` r
 #sum_square
@@ -276,12 +276,12 @@ result3
     ##                    value fevals gevals convergence kkt1 kkt2 xtime
     ## BFGS        1.208497e-23     37     17           0   NA   NA 0.003
     ## CG          3.823921e-13     51     21           0   NA   NA 0.001
-    ## Nelder-Mead 5.843035e-07    165     NA           0   NA   NA 0.002
+    ## Nelder-Mead 5.843035e-07    165     NA           0   NA   NA 0.001
     ## L-BFGS-B    1.456900e-10     10     10           0   NA   NA 0.001
-    ## nlm         3.230721e-14     NA     11           0   NA   NA 0.003
+    ## nlm         3.230721e-14     NA     11           0   NA   NA 0.002
     ## nlminb      0.000000e+00     55     49           0   NA   NA 0.001
     ## Rcgmin      6.146199e-32     10      5           0   NA   NA 0.001
-    ## Rvmmin      2.672091e-29     20     16           0   NA   NA 0.002
+    ## Rvmmin      2.672091e-29     20     16           0   NA   NA 0.001
     ## hjn         0.000000e+00    128     NA           0   NA   NA 0.002
 
 ``` r
@@ -301,13 +301,13 @@ result4
     ## Rvmmin      1.0000000 0.7071068 0.5946036 -0.5452539 3.821045e-29     37     27
     ## hjn         1.0000001 0.7071068 0.5946036  0.5452539 5.463278e-14    660     NA
     ##             convergence kkt1 kkt2 xtime
-    ## BFGS                  0   NA   NA 0.018
+    ## BFGS                  0   NA   NA 0.017
     ## CG                    0   NA   NA 0.003
     ## Nelder-Mead           0   NA   NA 0.003
     ## L-BFGS-B              0   NA   NA 0.001
-    ## nlm                   0   NA   NA 0.002
+    ## nlm                   0   NA   NA 0.001
     ## nlminb                0   NA   NA 0.001
-    ## Rcgmin                0   NA   NA 0.002
+    ## Rcgmin                0   NA   NA 0.001
     ## Rvmmin                0   NA   NA 0.002
     ## hjn                   0   NA   NA 0.009
 
@@ -379,7 +379,9 @@ require(DEoptim)
     ## Differential Evolution algorithm in R
     ## Authors: D. Ardia, K. Mullen, B. Peterson and J. Ulrich
 
--   **Rosenbrock**
+#### Optimising above function using DEoptim package.
+
+-   **Rosenbrock Function**
 
 ``` r
 #Rosenbrock
@@ -592,10 +594,10 @@ DEoptim_1 <- DEoptim(Rosenbrock, lower=c(-10,-10,-10), upper=c(10,10, 10), DEopt
 #plot of the optimization process for rosenbrock function
 plot(DEoptim_1)
 ```
+
 ![](Tests_files/figure-gfm/unnamed-chunk-8-2.png)<!-- -->
 
-
--   **Sphere**
+-   **Sphere Function**
 
 ``` r
 #sphere
@@ -661,7 +663,7 @@ plot(DEoptim_2)
 
 ![](Tests_files/figure-gfm/unnamed-chunk-9-2.png)<!-- -->
 
--   **Sum Square**
+-   **Sum Square Function**
 
 ``` r
 #sum square
@@ -727,7 +729,7 @@ plot(DEoptim_3)
 
 ![](Tests_files/figure-gfm/unnamed-chunk-10-2.png)<!-- -->
 
--   **Dixon&Price**
+-   **Dixon&Price Function**
 
 ``` r
 #dixon&price
@@ -820,7 +822,8 @@ require(ABCoptim)
 
     ## Loading required package: ABCoptim
 
--   **Rosenbrock**
+####Optimising above function using ABCoptim package. \* **Rosenbrock
+Function**
 
 ``` r
 #Rosenbrock
@@ -847,7 +850,7 @@ plot(ABCoptim_1, main="Rosenbrock")
 
 ![](Tests_files/figure-gfm/unnamed-chunk-13-1.png)<!-- -->
 
--   **Sphere**
+-   **Sphere Function**
 
 ``` r
 #sphere
@@ -857,7 +860,7 @@ plot(ABCoptim_2, main="Sphere")
 
 ![](Tests_files/figure-gfm/unnamed-chunk-14-1.png)<!-- -->
 
--   **Sum Square**
+-   **Sum Square Function**
 
 ``` r
 #sum_square
@@ -867,7 +870,7 @@ plot(ABCoptim_3, main="Sum Sqaure")
 
 ![](Tests_files/figure-gfm/unnamed-chunk-15-1.png)<!-- -->
 
--   **Dixon&price**
+-   **Dixon&price Function**
 
 ``` r
 #dixon&price
@@ -909,7 +912,9 @@ require(rgenoud)
     ## ##   Journal of Statistical Software, 42(11): 1-26. 
     ## ##
 
--   **Rosenbrock**
+#### Optimising above function using rgenoud package.
+
+-   **Rosenbrock Function**
 
 ``` r
 #Rosenbrock
@@ -938,7 +943,7 @@ genoud_1
     ## $operators
     ## [1] 249 250 250 250 250 250 250 250   0
 
--   **Sphere**
+-   **Sphere Function**
 
 ``` r
 #sphere
@@ -967,7 +972,7 @@ genoud_2
     ## $operators
     ## [1] 249 250 250 250 250 250 250 250   0
 
--   **Sum Square**
+-   **Sum Square Function**
 
 ``` r
 #sum_square
@@ -996,7 +1001,7 @@ genoud_3
     ## $operators
     ## [1] 249 250 250 250 250 250 250 250   0
 
--   **Dixon&price**
+-   **Dixon&price Function**
 
 ``` r
 #dixon&price
@@ -1044,6 +1049,60 @@ genoud_4
 
 ------------------------------------------------------------------------
 
+### 4. Genalg
+
+``` r
+#loading package genalg
+require(genalg)
+```
+
+    ## Loading required package: genalg
+
+#### Optimising Rosenbrock function using genalg package.
+
+``` r
+#function to display the progress of the optimisation process.
+monitor <- function(obj) {
+     # plot the population
+     xlim = c(obj$stringMin[1], obj$stringMax[1]);
+     ylim = c(obj$stringMin[2], obj$stringMax[2]);
+     iteration_num = obj$iter
+     lbl = paste("Iteration Number: ", obj$iter);
+     if(((iteration_num)%%10)==1 || iteration_num==100){
+       plot(obj$population, xlim=xlim, ylim=ylim,
+          xlab="x", ylab="y", main=lbl);
+     }
+}
+
+#Optimising Rosenbrock Function 
+rbga.results1 = rbga(c(-10, -10), c(10, 10), monitorFunc=monitor, evalFunc=Rosenbrock, mutationChance=0.001)
+```
+
+![](Tests_files/figure-gfm/unnamed-chunk-23-1.png)<!-- -->![](Tests_files/figure-gfm/unnamed-chunk-23-2.png)<!-- -->![](Tests_files/figure-gfm/unnamed-chunk-23-3.png)<!-- -->![](Tests_files/figure-gfm/unnamed-chunk-23-4.png)<!-- -->![](Tests_files/figure-gfm/unnamed-chunk-23-5.png)<!-- -->![](Tests_files/figure-gfm/unnamed-chunk-23-6.png)<!-- -->![](Tests_files/figure-gfm/unnamed-chunk-23-7.png)<!-- -->![](Tests_files/figure-gfm/unnamed-chunk-23-8.png)<!-- -->![](Tests_files/figure-gfm/unnamed-chunk-23-9.png)<!-- -->![](Tests_files/figure-gfm/unnamed-chunk-23-10.png)<!-- -->![](Tests_files/figure-gfm/unnamed-chunk-23-11.png)<!-- -->
+
+#### Why genalg?
+
+-   **genalg** is an optimization package which is based on genetic
+    algorithm. It provides **rbga** function for the optimization
+    purpose. We can set different parameters such as **mutationChance**,
+    **popSize**, **suggestions** and **iters** according to the need of
+    the problem to be optimised.
+
+-   **genalg** package has a **plot** function also which can be used to
+    visualize the optimization process.
+
+-   In addition to the above specified parameters, **rbga** also allows
+    users to monitor the optimization process as it progresses by
+    providing a monitor function to the parameter **monitorFunc**. As in
+    the above R code I have provided a monitor function which plots the
+    population after every (10\*x + 1)th iteration of the optimization.
+
+-   Also it can be seen from above plots that optimization using rbga
+    function is quite effective. That is the optimized populations were
+    obtained within less number of iterations and are accurate also.
+
+------------------------------------------------------------------------
+
 ## Task5
 
 Prepare R code for the volcano function of two parameters b=c(x,y) that
@@ -1074,7 +1133,7 @@ library(lattice)
 wireframe(z ~ x * y , data=df, main = "Plot of volcano function", shade = TRUE, scales = list(arrows = FALSE), screen = list(z = -50, x = -70))
 ```
 
-![](Tests_files/figure-gfm/unnamed-chunk-22-1.png)<!-- -->
+![](Tests_files/figure-gfm/unnamed-chunk-24-1.png)<!-- -->
 
 ``` r
 #using opm solvers for volcano function
@@ -1093,8 +1152,8 @@ result1
     ## L-BFGS-B      NA   NA 0.008
     ## Nelder-Mead   NA   NA 0.001
     ## CG            NA   NA 0.003
-    ## Rcgmin        NA   NA 0.000
-    ## Rvmmin        NA   NA 0.000
+    ## Rcgmin        NA   NA 0.001
+    ## Rvmmin        NA   NA 0.001
     ## BFGS          NA   NA 0.001
 
 #### Issues while optimizing Volcano function.
