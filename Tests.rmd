@@ -1,5 +1,5 @@
 ---
-title: "StochOptim: A R Wrapper for stocastic Optimisation"
+title: "StochOptim: A R Wrapper for stochastic Optimisation"
 output: github_document
 ---
 
@@ -339,7 +339,7 @@ rbga.results1 = rbga(c(-10, -10), c(10, 10), monitorFunc=monitor, evalFunc=Rosen
 
 * In addition to the above specified parameters, **rbga** also allows users to monitor the optimization process as it progresses by providing a monitor function to the parameter **monitorFunc**. As in the above R code I have provided a monitor function which plots the population after every (10*x + 1)th iteration of the optimization. 
 
-* Also it can be seen from above plots that optimization using rbga function is quite effective. That is the optimized populations were obtained within less number of iterations and are accurate also.
+* Also it can be seen from above plots that optimization using rbga function is quite effective. That is the optimized populations were obtained within less number of iterations and are accurate also. This is because the parameter **mutationChance** is very low which implies that convergence would be achieved faster.
 
 ---
 
