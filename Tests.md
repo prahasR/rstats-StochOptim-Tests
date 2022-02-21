@@ -440,7 +440,7 @@ DEoptim_1 <- DEoptim(Rosenbrock, lower=c(-10,-10,-10), upper=c(10,10, 10),
 plot(DEoptim_1)
 ```
 
-![](Tests_files/figure-gfm/unnamed-chunk-10-1.png)<!-- -->![](Tests_files/figure-gfm/unnamed-chunk-10-2.png)<!-- -->
+![](Tests_files/figure-gfm/unnamed-chunk-10-2.png)<!-- -->
 
 -   **Sphere Function**
 
@@ -453,7 +453,7 @@ DEoptim_2 <- DEoptim(sphere, lower=c(-10,-10,-10), upper=c(10,10, 10),
 plot(DEoptim_2)
 ```
 
-![](Tests_files/figure-gfm/unnamed-chunk-11-1.png)<!-- -->![](Tests_files/figure-gfm/unnamed-chunk-11-2.png)<!-- -->
+![](Tests_files/figure-gfm/unnamed-chunk-11-2.png)<!-- -->
 
 -   **Sum Square Function**
 
@@ -466,7 +466,7 @@ DEoptim_3 <- DEoptim(sum_sq, lower=c(-10,-10,-10), upper=c(10,10, 10),
 plot(DEoptim_3)
 ```
 
-![](Tests_files/figure-gfm/unnamed-chunk-12-1.png)<!-- -->![](Tests_files/figure-gfm/unnamed-chunk-12-2.png)<!-- -->
+![](Tests_files/figure-gfm/unnamed-chunk-12-2.png)<!-- -->
 
 -   **Dixon&Price Function**
 
@@ -478,8 +478,7 @@ DEoptim_4 <- DEoptim(d_and_p, lower=c(-10,-10,-10), upper=c(10,10, 10),
 #plot of the optimization process for dixon&price function
 plot(DEoptim_4)
 ```
-
-![](Tests_files/figure-gfm/unnamed-chunk-13-1.png)<!-- -->![](Tests_files/figure-gfm/unnamed-chunk-13-2.png)<!-- -->
+![](Tests_files/figure-gfm/unnamed-chunk-13-2.png)<!-- -->
 
 #### Why DEoptim ?
 
