@@ -929,17 +929,15 @@ and it obtains its global minimum value at infinite. Opm solvers are
 giving convergence code as 0. So we will check whether the obtained
 results are actually minima or not using higher derivative test. Which
 says
-  \[ 
-  if  A\ =\ \displaystyle \frac{\partial^2 f}{\partial x^2}(a,b) 
-  \]
-  \[
-  B\ =\ \displaystyle \frac{\partial^2 f}{\partial y\partial x}(a,b)
-  \]
-  \[
-  C\ =\ \displaystyle \frac{\partial^2 f}{\partial y^2}(a,b) 
-  \]
-  \[ then\ for\ (a,b)\ to\ be \ Minima\ A*C-B^2>0 \ and\ A>0 \]
 
+<img src="https://render.githubusercontent.com/render/math?math=if\ A\ =\ \frac{\partial^2 f}{\partial x^2}(a,b)">
+
+<img src="https://render.githubusercontent.com/render/math?math=B\ =\  \frac{\partial^2 f}{\partial y\partial x}(a,b)">
+
+<img src="https://render.githubusercontent.com/render/math?math=C\ =\  \frac{\partial^2 f}{\partial y^2}(a,b)">
+
+<img src="https://render.githubusercontent.com/render/math?math=then\ for\ (a,b)\ to\ be \ Minima\ A*C-B^2>0 \ and\ A>0 ">
+  
 ``` r
 #
 volcano.double_diff <- function(x){
@@ -998,7 +996,7 @@ result1 <- DEoptim(volcano, lower=c(-10,-10), upper=c(10,10),
 plot(result1)
 ```
 
-<!-- -->![](Tests_files/figure-gfm/unnamed-chunk-31-2.png)<!-- -->
+![](Tests_files/figure-gfm/unnamed-chunk-31-2.png)<!-- -->
 
 #### Trying to Optimise Volcano Function using genalg
 
