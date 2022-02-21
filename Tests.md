@@ -18,9 +18,11 @@ Rosenbrock<-function(x){
 #gradient function for Rosenbrock function
 Rosenbrock.g<-function(x){
   len<-length(x)
-  g<-rep(NA, len)
-  g[1]<- 2*(x[1]-1) + 400*x[1]*(x[1]^2-x[2])
-  g[2:(len-1)] <- 2*(x[2:(len-1)]-1) + 400*x[2:(len-1)]*(x[2:(len-1)]^2-x[2:(len-1) + 1]) + 200*(x[2:(len-1)]-x[2:(len-1) - 1]^2)
+  g <- rep(NA, len)
+  g[1] <- 2*(x[1]-1) + 400*x[1]*(x[1]^2-x[2])
+  g[2:(len-1)] <- 2*(x[2:(len-1)]-1) 
+                  + 400*x[2:(len-1)]*(x[2:(len-1)]^2-x[2:(len-1) + 1]) 
+                  + 200*(x[2:(len-1)]-x[2:(len-1) - 1]^2)
   g[len] <- 200 * (x[len] - x[len - 1]^2)
   g
 }
@@ -100,6 +102,39 @@ d_and_p(c(1,2,3,4))
 
     ## [1] 4230
 
+-   **Griewank Function**
+
+``` r
+#Griewank Function
+Griewank<- function(x){
+  len <- length(x)
+  sum <- sum(x^2)
+  v <- seq(1, len, length=len)
+  product <- prod(cos(x/sqrt(v)))
+  ans <- ((1/4000)*sum) - product + 1
+  out <- list( val = ans, lower=rep(-600, len), upper=rep(600, len))
+  ans
+}
+Griewank(c(0,0, 0, 0))
+```
+
+    ## [1] 0
+
+-   **Rastrigin Function**
+
+``` r
+#Rastrigin Function
+Rastrigin<- function(x){
+  len <- length(x)
+  ans <- 10*len + sum((x)^2 - 10*cos(2*pi*x))
+  out <- list( val = ans, lower=rep(-5.12, len), upper=rep(5.12, len))
+  ans
+}
+Rastrigin(c(1, 1, 1, 1))
+```
+
+    ## [1] 4
+
 ## Test 2
 
 Try to minimize these with the base R **optim()** function. Be sure to
@@ -112,17 +147,17 @@ optm_1
 ```
 
     ## $par
-    ## [1] 1 1 1 1
+    ## [1] 0.9787302 0.9571353 0.9142707 0.8330446
     ## 
     ## $value
-    ## [1] 5.676878e-17
+    ## [1] 0.01084746
     ## 
     ## $counts
     ## function gradient 
-    ##       99       37 
+    ##      899      100 
     ## 
     ## $convergence
-    ## [1] 0
+    ## [1] 1
     ## 
     ## $message
     ## NULL
@@ -156,10 +191,10 @@ optm_3
 ```
 
     ## $par
-    ## [1]  0.097806709 -0.047306129 -0.007213247  0.019075634
+    ## [1]  0.142126543  0.079285480 -0.022035524 -0.009102943
     ## 
     ## $value
-    ## [1] 0.0156535
+    ## [1] 0.03456048
     ## 
     ## $counts
     ## function gradient 
@@ -206,29 +241,35 @@ require(optimr)
 ``` r
 #Rosenbrock
 result1<-opm(c(1,2,3,4), Rosenbrock, Rosenbrock.g, method="ALL", control=list(kkt=FALSE, trace=0))
+```
+
+    ## Error in nlm(f = nlmfn, p = spar, iterlim = iterlim, print.level = print.level,  : 
+    ##   probable coding error in analytic gradient
+
+``` r
 result1
 ```
 
-    ##                    p1        p2        p3        p4        value fevals gevals
-    ## BFGS        1.0000000 1.0000000 1.0000000 1.0000000 5.676878e-17     99     37
-    ## CG          1.1117180 1.2374887 1.5330875 2.3535077 3.534559e-01   3298   1001
-    ## Nelder-Mead 0.9999500 0.9995963 0.9987679 0.9973660 3.189882e-05    513     NA
-    ## L-BFGS-B    0.9999997 0.9999995 0.9999990 0.9999984 1.207693e-11     43     43
-    ## nlm         1.0000000 1.0000000 0.9999999 0.9999999 7.364247e-14     NA     79
-    ## nlminb      1.0000000 1.0000000 1.0000000 1.0000000 1.887858e-16     54     40
-    ## Rcgmin      1.0000001 1.0000002 1.0000003 1.0000006 1.316622e-13    137     63
-    ## Rvmmin      1.0000000 1.0000000 1.0000000 1.0000000 3.722437e-30     65     44
-    ## hjn         1.0000006 1.0000012 1.0000024 1.0000047 8.483011e-12   3500     NA
+    ##                    p1        p2        p3        p4         value fevals gevals
+    ## BFGS        0.9999999 0.9999998 0.9999996 0.9999991  2.566237e-13   6406    725
+    ## CG          1.0000002 1.0000004 1.0000008 1.0000017  8.917342e-13   1515    461
+    ## Nelder-Mead 0.9999500 0.9995963 0.9987679 0.9973660  3.189882e-05    513     NA
+    ## L-BFGS-B    0.9942099 0.9884681 0.9769361 0.9541213  7.082469e-04    198    198
+    ## nlm                NA        NA        NA        NA 8.988466e+307     NA     NA
+    ## nlminb      1.1625031 1.3365570 1.6731140 2.8221145  1.949858e+00    261    151
+    ## Rcgmin      1.0000687 1.0001275 1.0002550 1.0005152  9.827292e-08   1819    887
+    ## Rvmmin      1.0000000 1.0000000 1.0000000 1.0000001  1.429157e-15   8633    975
+    ## hjn         1.0000006 1.0000012 1.0000024 1.0000047  8.483011e-12   3500     NA
     ##             convergence kkt1 kkt2 xtime
-    ## BFGS                  0   NA   NA 0.002
-    ## CG                    1   NA   NA 0.016
+    ## BFGS                  0   NA   NA 0.026
+    ## CG                    0   NA   NA 0.007
     ## Nelder-Mead           0   NA   NA 0.002
-    ## L-BFGS-B              0   NA   NA 0.001
-    ## nlm                   0   NA   NA 0.001
-    ## nlminb                0   NA   NA 0.002
-    ## Rcgmin                0   NA   NA 0.002
-    ## Rvmmin                0   NA   NA 0.004
-    ## hjn                   0   NA   NA 0.019
+    ## L-BFGS-B              0   NA   NA 0.002
+    ## nlm                9999   NA   NA 0.001
+    ## nlminb                1   NA   NA 0.003
+    ## Rcgmin                0   NA   NA 0.022
+    ## Rvmmin                3   NA   NA 0.151
+    ## hjn                   0   NA   NA 0.018
 
 ``` r
 #sphere
@@ -248,14 +289,14 @@ result2
     ## hjn           0.000000e+00   0.000000e+00   0.000000e+00   0.000000e+00
     ##                    value fevals gevals convergence kkt1 kkt2 xtime
     ## BFGS        2.179639e-30      5      3           0   NA   NA 0.000
-    ## CG          1.457834e-12     15      8           0   NA   NA 0.001
-    ## Nelder-Mead 2.457878e-07    207     NA           0   NA   NA 0.000
+    ## CG          1.457834e-12     15      8           0   NA   NA 0.000
+    ## Nelder-Mead 2.457878e-07    207     NA           0   NA   NA 0.001
     ## L-BFGS-B    3.597681e-61      4      4           0   NA   NA 0.000
-    ## nlm         0.000000e+00     NA      1           0   NA   NA 0.001
+    ## nlm         0.000000e+00     NA      1           0   NA   NA 0.000
     ## nlminb      0.000000e+00     30     27           0   NA   NA 0.000
     ## Rcgmin      1.247386e-29      4      2           0   NA   NA 0.000
-    ## Rvmmin      3.081488e-31      4      3           2   NA   NA 0.001
-    ## hjn         0.000000e+00    128     NA           0   NA   NA 0.001
+    ## Rvmmin      3.081488e-31      4      3           2   NA   NA 0.000
+    ## hjn         0.000000e+00    128     NA           0   NA   NA 0.000
 
 ``` r
 #sum_square
@@ -274,15 +315,15 @@ result3
     ## Rvmmin       -6.706204e-16  -6.761823e-16  -2.509268e-16  -2.508378e-15
     ## hjn           0.000000e+00   0.000000e+00   0.000000e+00   0.000000e+00
     ##                    value fevals gevals convergence kkt1 kkt2 xtime
-    ## BFGS        1.208497e-23     37     17           0   NA   NA 0.004
+    ## BFGS        1.208497e-23     37     17           0   NA   NA 0.003
     ## CG          3.823921e-13     51     21           0   NA   NA 0.001
     ## Nelder-Mead 5.843035e-07    165     NA           0   NA   NA 0.002
     ## L-BFGS-B    1.456900e-10     10     10           0   NA   NA 0.001
     ## nlm         3.230721e-14     NA     11           0   NA   NA 0.002
     ## nlminb      0.000000e+00     55     49           0   NA   NA 0.002
-    ## Rcgmin      6.146199e-32     10      5           0   NA   NA 0.001
+    ## Rcgmin      6.146199e-32     10      5           0   NA   NA 0.000
     ## Rvmmin      2.672091e-29     20     16           0   NA   NA 0.001
-    ## hjn         0.000000e+00    128     NA           0   NA   NA 0.002
+    ## hjn         0.000000e+00    128     NA           0   NA   NA 0.001
 
 ``` r
 #dixon&price
@@ -307,8 +348,8 @@ result4
     ## L-BFGS-B              0   NA   NA 0.001
     ## nlm                   0   NA   NA 0.002
     ## nlminb                0   NA   NA 0.001
-    ## Rcgmin                0   NA   NA 0.001
-    ## Rvmmin                0   NA   NA 0.003
+    ## Rcgmin                0   NA   NA 0.002
+    ## Rvmmin                0   NA   NA 0.002
     ## hjn                   0   NA   NA 0.009
 
 #### Observations from above Result
@@ -322,6 +363,13 @@ result4
     to Rosenbrock problem but still, the number of evaluations involved
     is larger than compared to gradient optimization methods for the
     same problem.
+
+-   It should be noted that the gradient we are providing to the solvers
+    are **partial derivatives** of the problem function w.r.t each
+    variable. So if the problem function is f(x, y, z), then gradient
+    vector will be (f’(w.r.t **x**), f’(w.r.t **y**), f’(w.r.t **z**)).
+    So this might not be sufficient for finding the optimum value of a
+    function.
 
 -   **CG** method reaches its iteration limit and does not able to find
     the minimum for the Rosenbrock function. Also it can be seen that
@@ -386,414 +434,52 @@ require(DEoptim)
 ``` r
 #Rosenbrock
 set.seed(1231)
-DEoptim_1 <- DEoptim(Rosenbrock, lower=c(-10,-10,-10), upper=c(10,10, 10), DEoptim.control(NP=40))
-```
-
-    ## Iteration: 1 bestvalit: 2481.927715 bestmemit:    1.658948    2.623582    1.906027
-    ## Iteration: 2 bestvalit: 2481.927715 bestmemit:    1.658948    2.623582    1.906027
-    ## Iteration: 3 bestvalit: 948.126917 bestmemit:   -1.536302    2.623582    3.830113
-    ## Iteration: 4 bestvalit: 135.612906 bestmemit:   -0.978280    0.255618   -0.839906
-    ## Iteration: 5 bestvalit: 135.612906 bestmemit:   -0.978280    0.255618   -0.839906
-    ## Iteration: 6 bestvalit: 37.609792 bestmemit:    1.718759    2.398873    5.547106
-    ## Iteration: 7 bestvalit: 37.609792 bestmemit:    1.718759    2.398873    5.547106
-    ## Iteration: 8 bestvalit: 37.609792 bestmemit:    1.718759    2.398873    5.547106
-    ## Iteration: 9 bestvalit: 8.678236 bestmemit:   -1.063658    1.260164    1.423908
-    ## Iteration: 10 bestvalit: 8.678236 bestmemit:   -1.063658    1.260164    1.423908
-    ## Iteration: 11 bestvalit: 8.678236 bestmemit:   -1.063658    1.260164    1.423908
-    ## Iteration: 12 bestvalit: 8.678236 bestmemit:   -1.063658    1.260164    1.423908
-    ## Iteration: 13 bestvalit: 8.678236 bestmemit:   -1.063658    1.260164    1.423908
-    ## Iteration: 14 bestvalit: 8.678236 bestmemit:   -1.063658    1.260164    1.423908
-    ## Iteration: 15 bestvalit: 8.678236 bestmemit:   -1.063658    1.260164    1.423908
-    ## Iteration: 16 bestvalit: 8.678236 bestmemit:   -1.063658    1.260164    1.423908
-    ## Iteration: 17 bestvalit: 8.678236 bestmemit:   -1.063658    1.260164    1.423908
-    ## Iteration: 18 bestvalit: 8.678236 bestmemit:   -1.063658    1.260164    1.423908
-    ## Iteration: 19 bestvalit: 6.718138 bestmemit:   -1.257655    1.464847    2.125854
-    ## Iteration: 20 bestvalit: 6.718138 bestmemit:   -1.257655    1.464847    2.125854
-    ## Iteration: 21 bestvalit: 6.718138 bestmemit:   -1.257655    1.464847    2.125854
-    ## Iteration: 22 bestvalit: 6.718138 bestmemit:   -1.257655    1.464847    2.125854
-    ## Iteration: 23 bestvalit: 6.718138 bestmemit:   -1.257655    1.464847    2.125854
-    ## Iteration: 24 bestvalit: 6.718138 bestmemit:   -1.257655    1.464847    2.125854
-    ## Iteration: 25 bestvalit: 2.006947 bestmemit:    0.853712    0.641855    0.516901
-    ## Iteration: 26 bestvalit: 2.006947 bestmemit:    0.853712    0.641855    0.516901
-    ## Iteration: 27 bestvalit: 2.006947 bestmemit:    0.853712    0.641855    0.516901
-    ## Iteration: 28 bestvalit: 2.006947 bestmemit:    0.853712    0.641855    0.516901
-    ## Iteration: 29 bestvalit: 2.006947 bestmemit:    0.853712    0.641855    0.516901
-    ## Iteration: 30 bestvalit: 2.006947 bestmemit:    0.853712    0.641855    0.516901
-    ## Iteration: 31 bestvalit: 1.343195 bestmemit:    0.747050    0.462156    0.187184
-    ## Iteration: 32 bestvalit: 1.343195 bestmemit:    0.747050    0.462156    0.187184
-    ## Iteration: 33 bestvalit: 1.343195 bestmemit:    0.747050    0.462156    0.187184
-    ## Iteration: 34 bestvalit: 1.343195 bestmemit:    0.747050    0.462156    0.187184
-    ## Iteration: 35 bestvalit: 0.170336 bestmemit:    0.853712    0.708459    0.516901
-    ## Iteration: 36 bestvalit: 0.170336 bestmemit:    0.853712    0.708459    0.516901
-    ## Iteration: 37 bestvalit: 0.170336 bestmemit:    0.853712    0.708459    0.516901
-    ## Iteration: 38 bestvalit: 0.170336 bestmemit:    0.853712    0.708459    0.516901
-    ## Iteration: 39 bestvalit: 0.170336 bestmemit:    0.853712    0.708459    0.516901
-    ## Iteration: 40 bestvalit: 0.170336 bestmemit:    0.853712    0.708459    0.516901
-    ## Iteration: 41 bestvalit: 0.170336 bestmemit:    0.853712    0.708459    0.516901
-    ## Iteration: 42 bestvalit: 0.170336 bestmemit:    0.853712    0.708459    0.516901
-    ## Iteration: 43 bestvalit: 0.170336 bestmemit:    0.853712    0.708459    0.516901
-    ## Iteration: 44 bestvalit: 0.170336 bestmemit:    0.853712    0.708459    0.516901
-    ## Iteration: 45 bestvalit: 0.170336 bestmemit:    0.853712    0.708459    0.516901
-    ## Iteration: 46 bestvalit: 0.170336 bestmemit:    0.853712    0.708459    0.516901
-    ## Iteration: 47 bestvalit: 0.170336 bestmemit:    0.853712    0.708459    0.516901
-    ## Iteration: 48 bestvalit: 0.170336 bestmemit:    0.853712    0.708459    0.516901
-    ## Iteration: 49 bestvalit: 0.170336 bestmemit:    0.853712    0.708459    0.516901
-    ## Iteration: 50 bestvalit: 0.166176 bestmemit:    0.867191    0.734993    0.562423
-    ## Iteration: 51 bestvalit: 0.166176 bestmemit:    0.867191    0.734993    0.562423
-    ## Iteration: 52 bestvalit: 0.166176 bestmemit:    0.867191    0.734993    0.562423
-    ## Iteration: 53 bestvalit: 0.166176 bestmemit:    0.867191    0.734993    0.562423
-    ## Iteration: 54 bestvalit: 0.166176 bestmemit:    0.867191    0.734993    0.562423
-    ## Iteration: 55 bestvalit: 0.166176 bestmemit:    0.867191    0.734993    0.562423
-    ## Iteration: 56 bestvalit: 0.166176 bestmemit:    0.867191    0.734993    0.562423
-    ## Iteration: 57 bestvalit: 0.166176 bestmemit:    0.867191    0.734993    0.562423
-    ## Iteration: 58 bestvalit: 0.166176 bestmemit:    0.867191    0.734993    0.562423
-    ## Iteration: 59 bestvalit: 0.138056 bestmemit:    0.984691    0.963953    0.892692
-    ## Iteration: 60 bestvalit: 0.138056 bestmemit:    0.984691    0.963953    0.892692
-    ## Iteration: 61 bestvalit: 0.049780 bestmemit:    0.984691    0.963953    0.907982
-    ## Iteration: 62 bestvalit: 0.049780 bestmemit:    0.984691    0.963953    0.907982
-    ## Iteration: 63 bestvalit: 0.049780 bestmemit:    0.984691    0.963953    0.907982
-    ## Iteration: 64 bestvalit: 0.049780 bestmemit:    0.984691    0.963953    0.907982
-    ## Iteration: 65 bestvalit: 0.049780 bestmemit:    0.984691    0.963953    0.907982
-    ## Iteration: 66 bestvalit: 0.049780 bestmemit:    0.984691    0.963953    0.907982
-    ## Iteration: 67 bestvalit: 0.049780 bestmemit:    0.984691    0.963953    0.907982
-    ## Iteration: 68 bestvalit: 0.049780 bestmemit:    0.984691    0.963953    0.907982
-    ## Iteration: 69 bestvalit: 0.049780 bestmemit:    0.984691    0.963953    0.907982
-    ## Iteration: 70 bestvalit: 0.049780 bestmemit:    0.984691    0.963953    0.907982
-    ## Iteration: 71 bestvalit: 0.049780 bestmemit:    0.984691    0.963953    0.907982
-    ## Iteration: 72 bestvalit: 0.049780 bestmemit:    0.984691    0.963953    0.907982
-    ## Iteration: 73 bestvalit: 0.049780 bestmemit:    0.984691    0.963953    0.907982
-    ## Iteration: 74 bestvalit: 0.049780 bestmemit:    0.984691    0.963953    0.907982
-    ## Iteration: 75 bestvalit: 0.049780 bestmemit:    0.984691    0.963953    0.907982
-    ## Iteration: 76 bestvalit: 0.049780 bestmemit:    0.984691    0.963953    0.907982
-    ## Iteration: 77 bestvalit: 0.049780 bestmemit:    0.984691    0.963953    0.907982
-    ## Iteration: 78 bestvalit: 0.049780 bestmemit:    0.984691    0.963953    0.907982
-    ## Iteration: 79 bestvalit: 0.049780 bestmemit:    0.984691    0.963953    0.907982
-    ## Iteration: 80 bestvalit: 0.049780 bestmemit:    0.984691    0.963953    0.907982
-    ## Iteration: 81 bestvalit: 0.049780 bestmemit:    0.984691    0.963953    0.907982
-    ## Iteration: 82 bestvalit: 0.040250 bestmemit:    1.028039    1.061651    1.108834
-    ## Iteration: 83 bestvalit: 0.040250 bestmemit:    1.028039    1.061651    1.108834
-    ## Iteration: 84 bestvalit: 0.040250 bestmemit:    1.028039    1.061651    1.108834
-    ## Iteration: 85 bestvalit: 0.040250 bestmemit:    1.028039    1.061651    1.108834
-    ## Iteration: 86 bestvalit: 0.040250 bestmemit:    1.028039    1.061651    1.108834
-    ## Iteration: 87 bestvalit: 0.039916 bestmemit:    0.959361    0.933738    0.859211
-    ## Iteration: 88 bestvalit: 0.039916 bestmemit:    0.959361    0.933738    0.859211
-    ## Iteration: 89 bestvalit: 0.039916 bestmemit:    0.959361    0.933738    0.859211
-    ## Iteration: 90 bestvalit: 0.039916 bestmemit:    0.959361    0.933738    0.859211
-    ## Iteration: 91 bestvalit: 0.039916 bestmemit:    0.959361    0.933738    0.859211
-    ## Iteration: 92 bestvalit: 0.034441 bestmemit:    0.959361    0.932945    0.859211
-    ## Iteration: 93 bestvalit: 0.034441 bestmemit:    0.959361    0.932945    0.859211
-    ## Iteration: 94 bestvalit: 0.034441 bestmemit:    0.959361    0.932945    0.859211
-    ## Iteration: 95 bestvalit: 0.012149 bestmemit:    0.954729    0.917153    0.840465
-    ## Iteration: 96 bestvalit: 0.012149 bestmemit:    0.954729    0.917153    0.840465
-    ## Iteration: 97 bestvalit: 0.012149 bestmemit:    0.954729    0.917153    0.840465
-    ## Iteration: 98 bestvalit: 0.012149 bestmemit:    0.954729    0.917153    0.840465
-    ## Iteration: 99 bestvalit: 0.012149 bestmemit:    0.954729    0.917153    0.840465
-    ## Iteration: 100 bestvalit: 0.012149 bestmemit:    0.954729    0.917153    0.840465
-    ## Iteration: 101 bestvalit: 0.012149 bestmemit:    0.954729    0.917153    0.840465
-    ## Iteration: 102 bestvalit: 0.012149 bestmemit:    0.954729    0.917153    0.840465
-    ## Iteration: 103 bestvalit: 0.012149 bestmemit:    0.954729    0.917153    0.840465
-    ## Iteration: 104 bestvalit: 0.012149 bestmemit:    0.954729    0.917153    0.840465
-    ## Iteration: 105 bestvalit: 0.012149 bestmemit:    0.954729    0.917153    0.840465
-    ## Iteration: 106 bestvalit: 0.012149 bestmemit:    0.954729    0.917153    0.840465
-    ## Iteration: 107 bestvalit: 0.012149 bestmemit:    0.954729    0.917153    0.840465
-    ## Iteration: 108 bestvalit: 0.012149 bestmemit:    0.954729    0.917153    0.840465
-    ## Iteration: 109 bestvalit: 0.012149 bestmemit:    0.954729    0.917153    0.840465
-    ## Iteration: 110 bestvalit: 0.012149 bestmemit:    0.954729    0.917153    0.840465
-    ## Iteration: 111 bestvalit: 0.012149 bestmemit:    0.954729    0.917153    0.840465
-    ## Iteration: 112 bestvalit: 0.012149 bestmemit:    0.954729    0.917153    0.840465
-    ## Iteration: 113 bestvalit: 0.012149 bestmemit:    0.954729    0.917153    0.840465
-    ## Iteration: 114 bestvalit: 0.012149 bestmemit:    0.954729    0.917153    0.840465
-    ## Iteration: 115 bestvalit: 0.012149 bestmemit:    0.954729    0.917153    0.840465
-    ## Iteration: 116 bestvalit: 0.012149 bestmemit:    0.954729    0.917153    0.840465
-    ## Iteration: 117 bestvalit: 0.012149 bestmemit:    0.954729    0.917153    0.840465
-    ## Iteration: 118 bestvalit: 0.012149 bestmemit:    0.954729    0.917153    0.840465
-    ## Iteration: 119 bestvalit: 0.012149 bestmemit:    0.954729    0.917153    0.840465
-    ## Iteration: 120 bestvalit: 0.007258 bestmemit:    1.017592    1.040863    1.078502
-    ## Iteration: 121 bestvalit: 0.007258 bestmemit:    1.017592    1.040863    1.078502
-    ## Iteration: 122 bestvalit: 0.000214 bestmemit:    1.000219    1.001687    1.002635
-    ## Iteration: 123 bestvalit: 0.000214 bestmemit:    1.000219    1.001687    1.002635
-    ## Iteration: 124 bestvalit: 0.000214 bestmemit:    1.000219    1.001687    1.002635
-    ## Iteration: 125 bestvalit: 0.000214 bestmemit:    1.000219    1.001687    1.002635
-    ## Iteration: 126 bestvalit: 0.000214 bestmemit:    1.000219    1.001687    1.002635
-    ## Iteration: 127 bestvalit: 0.000214 bestmemit:    1.000219    1.001687    1.002635
-    ## Iteration: 128 bestvalit: 0.000214 bestmemit:    1.000219    1.001687    1.002635
-    ## Iteration: 129 bestvalit: 0.000214 bestmemit:    1.000219    1.001687    1.002635
-    ## Iteration: 130 bestvalit: 0.000214 bestmemit:    1.000219    1.001687    1.002635
-    ## Iteration: 131 bestvalit: 0.000214 bestmemit:    1.000219    1.001687    1.002635
-    ## Iteration: 132 bestvalit: 0.000214 bestmemit:    1.000219    1.001687    1.002635
-    ## Iteration: 133 bestvalit: 0.000214 bestmemit:    1.000219    1.001687    1.002635
-    ## Iteration: 134 bestvalit: 0.000214 bestmemit:    1.000219    1.001687    1.002635
-    ## Iteration: 135 bestvalit: 0.000214 bestmemit:    1.000219    1.001687    1.002635
-    ## Iteration: 136 bestvalit: 0.000214 bestmemit:    1.000219    1.001687    1.002635
-    ## Iteration: 137 bestvalit: 0.000214 bestmemit:    1.000219    1.001687    1.002635
-    ## Iteration: 138 bestvalit: 0.000214 bestmemit:    1.000219    1.001687    1.002635
-    ## Iteration: 139 bestvalit: 0.000214 bestmemit:    1.000219    1.001687    1.002635
-    ## Iteration: 140 bestvalit: 0.000214 bestmemit:    1.000219    1.001687    1.002635
-    ## Iteration: 141 bestvalit: 0.000214 bestmemit:    1.000219    1.001687    1.002635
-    ## Iteration: 142 bestvalit: 0.000214 bestmemit:    1.000219    1.001687    1.002635
-    ## Iteration: 143 bestvalit: 0.000214 bestmemit:    1.000219    1.001687    1.002635
-    ## Iteration: 144 bestvalit: 0.000214 bestmemit:    1.000219    1.001687    1.002635
-    ## Iteration: 145 bestvalit: 0.000214 bestmemit:    1.000219    1.001687    1.002635
-    ## Iteration: 146 bestvalit: 0.000214 bestmemit:    1.000219    1.001687    1.002635
-    ## Iteration: 147 bestvalit: 0.000214 bestmemit:    1.000219    1.001687    1.002635
-    ## Iteration: 148 bestvalit: 0.000214 bestmemit:    1.000219    1.001687    1.002635
-    ## Iteration: 149 bestvalit: 0.000214 bestmemit:    1.000219    1.001687    1.002635
-    ## Iteration: 150 bestvalit: 0.000214 bestmemit:    1.000219    1.001687    1.002635
-    ## Iteration: 151 bestvalit: 0.000018 bestmemit:    0.999964    0.999872    0.999320
-    ## Iteration: 152 bestvalit: 0.000018 bestmemit:    0.999964    0.999872    0.999320
-    ## Iteration: 153 bestvalit: 0.000018 bestmemit:    0.999964    0.999872    0.999320
-    ## Iteration: 154 bestvalit: 0.000018 bestmemit:    0.999964    0.999872    0.999320
-    ## Iteration: 155 bestvalit: 0.000018 bestmemit:    0.999964    0.999872    0.999320
-    ## Iteration: 156 bestvalit: 0.000018 bestmemit:    0.999964    0.999872    0.999320
-    ## Iteration: 157 bestvalit: 0.000018 bestmemit:    0.999964    0.999872    0.999320
-    ## Iteration: 158 bestvalit: 0.000018 bestmemit:    0.999964    0.999872    0.999320
-    ## Iteration: 159 bestvalit: 0.000018 bestmemit:    0.999964    0.999872    0.999320
-    ## Iteration: 160 bestvalit: 0.000018 bestmemit:    0.999964    0.999872    0.999320
-    ## Iteration: 161 bestvalit: 0.000018 bestmemit:    0.999964    0.999872    0.999320
-    ## Iteration: 162 bestvalit: 0.000018 bestmemit:    0.999964    0.999872    0.999320
-    ## Iteration: 163 bestvalit: 0.000018 bestmemit:    0.999964    0.999872    0.999320
-    ## Iteration: 164 bestvalit: 0.000018 bestmemit:    0.999964    0.999872    0.999320
-    ## Iteration: 165 bestvalit: 0.000018 bestmemit:    0.999964    0.999872    0.999320
-    ## Iteration: 166 bestvalit: 0.000018 bestmemit:    0.999964    0.999872    0.999320
-    ## Iteration: 167 bestvalit: 0.000018 bestmemit:    0.999964    0.999872    0.999320
-    ## Iteration: 168 bestvalit: 0.000018 bestmemit:    0.999964    0.999872    0.999320
-    ## Iteration: 169 bestvalit: 0.000018 bestmemit:    0.999964    0.999872    0.999320
-    ## Iteration: 170 bestvalit: 0.000018 bestmemit:    0.999964    0.999872    0.999320
-    ## Iteration: 171 bestvalit: 0.000018 bestmemit:    0.999964    0.999872    0.999320
-    ## Iteration: 172 bestvalit: 0.000018 bestmemit:    0.999964    0.999872    0.999320
-    ## Iteration: 173 bestvalit: 0.000018 bestmemit:    0.999964    0.999872    0.999320
-    ## Iteration: 174 bestvalit: 0.000018 bestmemit:    0.999964    0.999872    0.999320
-    ## Iteration: 175 bestvalit: 0.000018 bestmemit:    0.999964    0.999872    0.999320
-    ## Iteration: 176 bestvalit: 0.000018 bestmemit:    0.999964    0.999872    0.999320
-    ## Iteration: 177 bestvalit: 0.000018 bestmemit:    0.999964    0.999872    0.999320
-    ## Iteration: 178 bestvalit: 0.000006 bestmemit:    0.999778    0.999687    0.999571
-    ## Iteration: 179 bestvalit: 0.000006 bestmemit:    0.999778    0.999687    0.999571
-    ## Iteration: 180 bestvalit: 0.000006 bestmemit:    0.999778    0.999687    0.999571
-    ## Iteration: 181 bestvalit: 0.000006 bestmemit:    0.999778    0.999687    0.999571
-    ## Iteration: 182 bestvalit: 0.000006 bestmemit:    0.999778    0.999687    0.999571
-    ## Iteration: 183 bestvalit: 0.000006 bestmemit:    0.999778    0.999687    0.999571
-    ## Iteration: 184 bestvalit: 0.000001 bestmemit:    1.000077    1.000171    1.000253
-    ## Iteration: 185 bestvalit: 0.000001 bestmemit:    1.000077    1.000171    1.000253
-    ## Iteration: 186 bestvalit: 0.000001 bestmemit:    1.000077    1.000171    1.000253
-    ## Iteration: 187 bestvalit: 0.000001 bestmemit:    1.000077    1.000171    1.000253
-    ## Iteration: 188 bestvalit: 0.000001 bestmemit:    1.000077    1.000171    1.000253
-    ## Iteration: 189 bestvalit: 0.000001 bestmemit:    1.000077    1.000171    1.000253
-    ## Iteration: 190 bestvalit: 0.000001 bestmemit:    1.000077    1.000171    1.000253
-    ## Iteration: 191 bestvalit: 0.000001 bestmemit:    1.000077    1.000171    1.000253
-    ## Iteration: 192 bestvalit: 0.000001 bestmemit:    1.000077    1.000171    1.000253
-    ## Iteration: 193 bestvalit: 0.000001 bestmemit:    1.000077    1.000171    1.000253
-    ## Iteration: 194 bestvalit: 0.000001 bestmemit:    1.000077    1.000171    1.000253
-    ## Iteration: 195 bestvalit: 0.000001 bestmemit:    1.000077    1.000171    1.000253
-    ## Iteration: 196 bestvalit: 0.000001 bestmemit:    1.000077    1.000171    1.000253
-    ## Iteration: 197 bestvalit: 0.000001 bestmemit:    1.000077    1.000171    1.000253
-    ## Iteration: 198 bestvalit: 0.000001 bestmemit:    1.000077    1.000171    1.000253
-    ## Iteration: 199 bestvalit: 0.000001 bestmemit:    1.000077    1.000171    1.000253
-    ## Iteration: 200 bestvalit: 0.000001 bestmemit:    1.000077    1.000171    1.000253
-
-``` r
+DEoptim_1 <- DEoptim(Rosenbrock, lower=c(-10,-10,-10), upper=c(10,10, 10),
+                     DEoptim.control(NP=40, trace = FALSE))
 #plot of the optimization process for rosenbrock function
 plot(DEoptim_1)
 ```
 
-![](Tests_files/figure-gfm/unnamed-chunk-8-2.png)<!-- -->
+![](Tests_files/figure-gfm/unnamed-chunk-10-1.png)<!-- -->![](Tests_files/figure-gfm/unnamed-chunk-10-2.png)<!-- -->
 
 -   **Sphere Function**
 
 ``` r
 #sphere
 set.seed(1232)
-DEoptim_2 <- DEoptim(sphere, lower=c(-10,-10,-10), upper=c(10,10, 10), DEoptim.control(NP=40, itermax=50))
-```
-
-    ## Iteration: 1 bestvalit: 7.719924 bestmemit:   -0.742832    0.962688    2.498271
-    ## Iteration: 2 bestvalit: 3.474574 bestmemit:   -0.320580   -0.419554    1.787674
-    ## Iteration: 3 bestvalit: 3.474574 bestmemit:   -0.320580   -0.419554    1.787674
-    ## Iteration: 4 bestvalit: 3.474574 bestmemit:   -0.320580   -0.419554    1.787674
-    ## Iteration: 5 bestvalit: 0.223649 bestmemit:   -0.002178    0.405836    0.242779
-    ## Iteration: 6 bestvalit: 0.223649 bestmemit:   -0.002178    0.405836    0.242779
-    ## Iteration: 7 bestvalit: 0.223649 bestmemit:   -0.002178    0.405836    0.242779
-    ## Iteration: 8 bestvalit: 0.223649 bestmemit:   -0.002178    0.405836    0.242779
-    ## Iteration: 9 bestvalit: 0.223649 bestmemit:   -0.002178    0.405836    0.242779
-    ## Iteration: 10 bestvalit: 0.223649 bestmemit:   -0.002178    0.405836    0.242779
-    ## Iteration: 11 bestvalit: 0.065091 bestmemit:   -0.002178    0.078387    0.242779
-    ## Iteration: 12 bestvalit: 0.065091 bestmemit:   -0.002178    0.078387    0.242779
-    ## Iteration: 13 bestvalit: 0.065091 bestmemit:   -0.002178    0.078387    0.242779
-    ## Iteration: 14 bestvalit: 0.065091 bestmemit:   -0.002178    0.078387    0.242779
-    ## Iteration: 15 bestvalit: 0.063107 bestmemit:   -0.232111    0.091889    0.028068
-    ## Iteration: 16 bestvalit: 0.030034 bestmemit:   -0.010469   -0.065040    0.160293
-    ## Iteration: 17 bestvalit: 0.030034 bestmemit:   -0.010469   -0.065040    0.160293
-    ## Iteration: 18 bestvalit: 0.030034 bestmemit:   -0.010469   -0.065040    0.160293
-    ## Iteration: 19 bestvalit: 0.026528 bestmemit:    0.136248   -0.061741   -0.064442
-    ## Iteration: 20 bestvalit: 0.007729 bestmemit:   -0.041720    0.060595    0.048136
-    ## Iteration: 21 bestvalit: 0.004731 bestmemit:    0.033929   -0.035539    0.048136
-    ## Iteration: 22 bestvalit: 0.004731 bestmemit:    0.033929   -0.035539    0.048136
-    ## Iteration: 23 bestvalit: 0.000432 bestmemit:   -0.006265    0.010752    0.016634
-    ## Iteration: 24 bestvalit: 0.000432 bestmemit:   -0.006265    0.010752    0.016634
-    ## Iteration: 25 bestvalit: 0.000432 bestmemit:   -0.006265    0.010752    0.016634
-    ## Iteration: 26 bestvalit: 0.000432 bestmemit:   -0.006265    0.010752    0.016634
-    ## Iteration: 27 bestvalit: 0.000147 bestmemit:    0.009929   -0.003788    0.005818
-    ## Iteration: 28 bestvalit: 0.000147 bestmemit:    0.009929   -0.003788    0.005818
-    ## Iteration: 29 bestvalit: 0.000147 bestmemit:    0.009929   -0.003788    0.005818
-    ## Iteration: 30 bestvalit: 0.000147 bestmemit:    0.009929   -0.003788    0.005818
-    ## Iteration: 31 bestvalit: 0.000120 bestmemit:    0.009382    0.004647    0.003158
-    ## Iteration: 32 bestvalit: 0.000117 bestmemit:    0.009382    0.004647    0.002681
-    ## Iteration: 33 bestvalit: 0.000079 bestmemit:    0.006361    0.005227   -0.003421
-    ## Iteration: 34 bestvalit: 0.000022 bestmemit:   -0.003403   -0.001848   -0.002722
-    ## Iteration: 35 bestvalit: 0.000012 bestmemit:   -0.001293   -0.001848   -0.002722
-    ## Iteration: 36 bestvalit: 0.000012 bestmemit:   -0.001293   -0.001848   -0.002722
-    ## Iteration: 37 bestvalit: 0.000012 bestmemit:   -0.001293   -0.001848   -0.002722
-    ## Iteration: 38 bestvalit: 0.000011 bestmemit:   -0.000536   -0.001848   -0.002722
-    ## Iteration: 39 bestvalit: 0.000011 bestmemit:   -0.000536   -0.001848   -0.002722
-    ## Iteration: 40 bestvalit: 0.000009 bestmemit:    0.000085    0.003008    0.000408
-    ## Iteration: 41 bestvalit: 0.000004 bestmemit:    0.001466    0.001375    0.000130
-    ## Iteration: 42 bestvalit: 0.000004 bestmemit:   -0.001988   -0.000287    0.000085
-    ## Iteration: 43 bestvalit: 0.000004 bestmemit:   -0.001988   -0.000287    0.000085
-    ## Iteration: 44 bestvalit: 0.000000 bestmemit:   -0.000279   -0.000287    0.000085
-    ## Iteration: 45 bestvalit: 0.000000 bestmemit:   -0.000279   -0.000287    0.000085
-    ## Iteration: 46 bestvalit: 0.000000 bestmemit:    0.000189   -0.000000    0.000095
-    ## Iteration: 47 bestvalit: 0.000000 bestmemit:    0.000189   -0.000000    0.000095
-    ## Iteration: 48 bestvalit: 0.000000 bestmemit:    0.000189   -0.000000    0.000095
-    ## Iteration: 49 bestvalit: 0.000000 bestmemit:    0.000189   -0.000000    0.000095
-    ## Iteration: 50 bestvalit: 0.000000 bestmemit:    0.000189   -0.000000    0.000095
-
-``` r
+DEoptim_2 <- DEoptim(sphere, lower=c(-10,-10,-10), upper=c(10,10, 10),
+                     DEoptim.control(NP=40, itermax=50, trace = FALSE))
 #plot of the optimization process for sphere function
 plot(DEoptim_2)
 ```
 
-![](Tests_files/figure-gfm/unnamed-chunk-9-2.png)<!-- -->
+![](Tests_files/figure-gfm/unnamed-chunk-11-1.png)<!-- -->![](Tests_files/figure-gfm/unnamed-chunk-11-2.png)<!-- -->
 
 -   **Sum Square Function**
 
 ``` r
 #sum square
 set.seed(1233)
-DEoptim_3 <- DEoptim(sum_sq, lower=c(-10,-10,-10), upper=c(10,10, 10), DEoptim.control(NP=40, itermax=50))
-```
-
-    ## Iteration: 1 bestvalit: 2.346816 bestmemit:    0.748773    0.661379    0.551153
-    ## Iteration: 2 bestvalit: 2.346816 bestmemit:    0.748773    0.661379    0.551153
-    ## Iteration: 3 bestvalit: 2.346816 bestmemit:    0.748773    0.661379    0.551153
-    ## Iteration: 4 bestvalit: 1.385563 bestmemit:    0.409542   -0.755395    0.159788
-    ## Iteration: 5 bestvalit: 1.385563 bestmemit:    0.409542   -0.755395    0.159788
-    ## Iteration: 6 bestvalit: 1.385563 bestmemit:    0.409542   -0.755395    0.159788
-    ## Iteration: 7 bestvalit: 0.586563 bestmemit:    0.409542    0.413668    0.159788
-    ## Iteration: 8 bestvalit: 0.194618 bestmemit:    0.410530    0.091784    0.055482
-    ## Iteration: 9 bestvalit: 0.194618 bestmemit:    0.410530    0.091784    0.055482
-    ## Iteration: 10 bestvalit: 0.041501 bestmemit:    0.078908   -0.075156   -0.089401
-    ## Iteration: 11 bestvalit: 0.041501 bestmemit:    0.078908   -0.075156   -0.089401
-    ## Iteration: 12 bestvalit: 0.041501 bestmemit:    0.078908   -0.075156   -0.089401
-    ## Iteration: 13 bestvalit: 0.041501 bestmemit:    0.078908   -0.075156   -0.089401
-    ## Iteration: 14 bestvalit: 0.041501 bestmemit:    0.078908   -0.075156   -0.089401
-    ## Iteration: 15 bestvalit: 0.041501 bestmemit:    0.078908   -0.075156   -0.089401
-    ## Iteration: 16 bestvalit: 0.041501 bestmemit:    0.078908   -0.075156   -0.089401
-    ## Iteration: 17 bestvalit: 0.041501 bestmemit:    0.078908   -0.075156   -0.089401
-    ## Iteration: 18 bestvalit: 0.028041 bestmemit:   -0.121174   -0.014476   -0.065672
-    ## Iteration: 19 bestvalit: 0.028041 bestmemit:   -0.121174   -0.014476   -0.065672
-    ## Iteration: 20 bestvalit: 0.015939 bestmemit:    0.075784    0.021917    0.055482
-    ## Iteration: 21 bestvalit: 0.015939 bestmemit:    0.075784    0.021917    0.055482
-    ## Iteration: 22 bestvalit: 0.009471 bestmemit:    0.038261   -0.014476    0.050294
-    ## Iteration: 23 bestvalit: 0.001058 bestmemit:    0.013751    0.011574    0.014159
-    ## Iteration: 24 bestvalit: 0.001058 bestmemit:    0.013751    0.011574    0.014159
-    ## Iteration: 25 bestvalit: 0.001058 bestmemit:    0.013751    0.011574    0.014159
-    ## Iteration: 26 bestvalit: 0.001058 bestmemit:    0.013751    0.011574    0.014159
-    ## Iteration: 27 bestvalit: 0.001058 bestmemit:    0.013751    0.011574    0.014159
-    ## Iteration: 28 bestvalit: 0.001058 bestmemit:    0.013751    0.011574    0.014159
-    ## Iteration: 29 bestvalit: 0.001058 bestmemit:    0.013751    0.011574    0.014159
-    ## Iteration: 30 bestvalit: 0.001058 bestmemit:    0.013751    0.011574    0.014159
-    ## Iteration: 31 bestvalit: 0.001058 bestmemit:    0.013751    0.011574    0.014159
-    ## Iteration: 32 bestvalit: 0.000910 bestmemit:    0.029140   -0.003770    0.003303
-    ## Iteration: 33 bestvalit: 0.000910 bestmemit:    0.029140   -0.003770    0.003303
-    ## Iteration: 34 bestvalit: 0.000892 bestmemit:   -0.011157   -0.007014   -0.014939
-    ## Iteration: 35 bestvalit: 0.000246 bestmemit:    0.013591   -0.003770    0.003303
-    ## Iteration: 36 bestvalit: 0.000127 bestmemit:   -0.010481    0.000318    0.002394
-    ## Iteration: 37 bestvalit: 0.000018 bestmemit:   -0.004070   -0.000390   -0.000720
-    ## Iteration: 38 bestvalit: 0.000018 bestmemit:   -0.004070   -0.000390   -0.000720
-    ## Iteration: 39 bestvalit: 0.000018 bestmemit:   -0.004070   -0.000390   -0.000720
-    ## Iteration: 40 bestvalit: 0.000018 bestmemit:   -0.004070   -0.000390   -0.000720
-    ## Iteration: 41 bestvalit: 0.000018 bestmemit:   -0.004070   -0.000390   -0.000720
-    ## Iteration: 42 bestvalit: 0.000018 bestmemit:   -0.004070   -0.000390   -0.000720
-    ## Iteration: 43 bestvalit: 0.000018 bestmemit:   -0.004070   -0.000390   -0.000720
-    ## Iteration: 44 bestvalit: 0.000013 bestmemit:    0.001629   -0.002174    0.000450
-    ## Iteration: 45 bestvalit: 0.000013 bestmemit:    0.001629   -0.002174    0.000450
-    ## Iteration: 46 bestvalit: 0.000013 bestmemit:    0.001629   -0.002174    0.000450
-    ## Iteration: 47 bestvalit: 0.000007 bestmemit:   -0.001523    0.000751   -0.001070
-    ## Iteration: 48 bestvalit: 0.000004 bestmemit:   -0.001841   -0.000183   -0.000201
-    ## Iteration: 49 bestvalit: 0.000004 bestmemit:   -0.001841   -0.000183   -0.000201
-    ## Iteration: 50 bestvalit: 0.000004 bestmemit:   -0.001841   -0.000183   -0.000201
-
-``` r
+DEoptim_3 <- DEoptim(sum_sq, lower=c(-10,-10,-10), upper=c(10,10, 10),
+                     DEoptim.control(NP=40, itermax=50, trace = FALSE))
 #plot of the optimization process for sum_square function
 plot(DEoptim_3)
 ```
 
-![](Tests_files/figure-gfm/unnamed-chunk-10-2.png)<!-- -->
+![](Tests_files/figure-gfm/unnamed-chunk-12-1.png)<!-- -->![](Tests_files/figure-gfm/unnamed-chunk-12-2.png)<!-- -->
 
 -   **Dixon&Price Function**
 
 ``` r
 #dixon&price
 set.seed(1234)
-DEoptim_4 <- DEoptim(d_and_p, lower=c(-10,-10,-10), upper=c(10,10, 10), DEoptim.control(NP=40, itermax=50))
-```
-
-    ## Iteration: 1 bestvalit: 63.519670 bestmemit:    6.626901    1.319336   -1.289379
-    ## Iteration: 2 bestvalit: 63.519670 bestmemit:    6.626901    1.319336   -1.289379
-    ## Iteration: 3 bestvalit: 63.519670 bestmemit:    6.626901    1.319336   -1.289379
-    ## Iteration: 4 bestvalit: 8.546650 bestmemit:   -0.770965    0.013502   -0.774465
-    ## Iteration: 5 bestvalit: 8.546650 bestmemit:   -0.770965    0.013502   -0.774465
-    ## Iteration: 6 bestvalit: 8.546650 bestmemit:   -0.770965    0.013502   -0.774465
-    ## Iteration: 7 bestvalit: 8.546650 bestmemit:   -0.770965    0.013502   -0.774465
-    ## Iteration: 8 bestvalit: 1.532689 bestmemit:    1.314040    0.758864   -0.200361
-    ## Iteration: 9 bestvalit: 0.190456 bestmemit:    1.314040    0.758864    0.567721
-    ## Iteration: 10 bestvalit: 0.190456 bestmemit:    1.314040    0.758864    0.567721
-    ## Iteration: 11 bestvalit: 0.190456 bestmemit:    1.314040    0.758864    0.567721
-    ## Iteration: 12 bestvalit: 0.190456 bestmemit:    1.314040    0.758864    0.567721
-    ## Iteration: 13 bestvalit: 0.190456 bestmemit:    1.314040    0.758864    0.567721
-    ## Iteration: 14 bestvalit: 0.190456 bestmemit:    1.314040    0.758864    0.567721
-    ## Iteration: 15 bestvalit: 0.190456 bestmemit:    1.314040    0.758864    0.567721
-    ## Iteration: 16 bestvalit: 0.190456 bestmemit:    1.314040    0.758864    0.567721
-    ## Iteration: 17 bestvalit: 0.092510 bestmemit:    0.696443    0.585244    0.538243
-    ## Iteration: 18 bestvalit: 0.040941 bestmemit:    0.951791    0.737264   -0.596446
-    ## Iteration: 19 bestvalit: 0.040941 bestmemit:    0.951791    0.737264   -0.596446
-    ## Iteration: 20 bestvalit: 0.040941 bestmemit:    0.951791    0.737264   -0.596446
-    ## Iteration: 21 bestvalit: 0.040941 bestmemit:    0.951791    0.737264   -0.596446
-    ## Iteration: 22 bestvalit: 0.040941 bestmemit:    0.951791    0.737264   -0.596446
-    ## Iteration: 23 bestvalit: 0.040941 bestmemit:    0.951791    0.737264   -0.596446
-    ## Iteration: 24 bestvalit: 0.040941 bestmemit:    0.951791    0.737264   -0.596446
-    ## Iteration: 25 bestvalit: 0.040941 bestmemit:    0.951791    0.737264   -0.596446
-    ## Iteration: 26 bestvalit: 0.040941 bestmemit:    0.951791    0.737264   -0.596446
-    ## Iteration: 27 bestvalit: 0.040941 bestmemit:    0.951791    0.737264   -0.596446
-    ## Iteration: 28 bestvalit: 0.040941 bestmemit:    0.951791    0.737264   -0.596446
-    ## Iteration: 29 bestvalit: 0.040941 bestmemit:    0.951791    0.737264   -0.596446
-    ## Iteration: 30 bestvalit: 0.040941 bestmemit:    0.951791    0.737264   -0.596446
-    ## Iteration: 31 bestvalit: 0.040941 bestmemit:    0.951791    0.737264   -0.596446
-    ## Iteration: 32 bestvalit: 0.040941 bestmemit:    0.951791    0.737264   -0.596446
-    ## Iteration: 33 bestvalit: 0.040941 bestmemit:    0.951791    0.737264   -0.596446
-    ## Iteration: 34 bestvalit: 0.040941 bestmemit:    0.951791    0.737264   -0.596446
-    ## Iteration: 35 bestvalit: 0.040941 bestmemit:    0.951791    0.737264   -0.596446
-    ## Iteration: 36 bestvalit: 0.037140 bestmemit:    0.997439    0.751015   -0.599708
-    ## Iteration: 37 bestvalit: 0.018295 bestmemit:    0.986512    0.704419   -0.559851
-    ## Iteration: 38 bestvalit: 0.016022 bestmemit:    1.059073    0.751015   -0.599708
-    ## Iteration: 39 bestvalit: 0.016022 bestmemit:    1.059073    0.751015   -0.599708
-    ## Iteration: 40 bestvalit: 0.008449 bestmemit:    0.917018    0.667357   -0.580995
-    ## Iteration: 41 bestvalit: 0.001647 bestmemit:    0.986512    0.704419   -0.584316
-    ## Iteration: 42 bestvalit: 0.001410 bestmemit:    1.007968    0.704419   -0.586285
-    ## Iteration: 43 bestvalit: 0.001158 bestmemit:    1.004185    0.704419   -0.586285
-    ## Iteration: 44 bestvalit: 0.001158 bestmemit:    1.004185    0.704419   -0.586285
-    ## Iteration: 45 bestvalit: 0.000597 bestmemit:    1.018041    0.717523   -0.599153
-    ## Iteration: 46 bestvalit: 0.000597 bestmemit:    1.018041    0.717523   -0.599153
-    ## Iteration: 47 bestvalit: 0.000597 bestmemit:    1.018041    0.717523   -0.599153
-    ## Iteration: 48 bestvalit: 0.000597 bestmemit:    1.018041    0.717523   -0.599153
-    ## Iteration: 49 bestvalit: 0.000597 bestmemit:    1.018041    0.717523   -0.599153
-    ## Iteration: 50 bestvalit: 0.000397 bestmemit:    0.989883    0.707446   -0.596446
-
-``` r
+DEoptim_4 <- DEoptim(d_and_p, lower=c(-10,-10,-10), upper=c(10,10, 10),
+                     DEoptim.control(NP=40, itermax=50, trace = FALSE))
 #plot of the optimization process for dixon&price function
 plot(DEoptim_4)
 ```
 
-![](Tests_files/figure-gfm/unnamed-chunk-11-2.png)<!-- -->
+![](Tests_files/figure-gfm/unnamed-chunk-13-1.png)<!-- -->![](Tests_files/figure-gfm/unnamed-chunk-13-2.png)<!-- -->
 
 #### Why DEoptim ?
 
@@ -822,8 +508,9 @@ require(ABCoptim)
 
     ## Loading required package: ABCoptim
 
-####Optimising above function using ABCoptim package. \* **Rosenbrock
-Function**
+#### Optimising above function using ABCoptim package.
+
+-   **Rosenbrock Function**
 
 ``` r
 #Rosenbrock
@@ -848,7 +535,7 @@ print(ABCoptim_1)
 plot(ABCoptim_1, main="Rosenbrock")
 ```
 
-![](Tests_files/figure-gfm/unnamed-chunk-13-1.png)<!-- -->
+![](Tests_files/figure-gfm/unnamed-chunk-15-1.png)<!-- -->
 
 -   **Sphere Function**
 
@@ -858,7 +545,7 @@ ABCoptim_2 <- abc_optim(c(1,2,3), sphere, lb=-10, ub=10, criter=50)
 plot(ABCoptim_2, main="Sphere")
 ```
 
-![](Tests_files/figure-gfm/unnamed-chunk-14-1.png)<!-- -->
+![](Tests_files/figure-gfm/unnamed-chunk-16-1.png)<!-- -->
 
 -   **Sum Square Function**
 
@@ -868,7 +555,7 @@ ABCoptim_3 <- abc_optim(c(1,2,3), sum_sq, lb=-10, ub=10, criter=50)
 plot(ABCoptim_3, main="Sum Sqaure")
 ```
 
-![](Tests_files/figure-gfm/unnamed-chunk-15-1.png)<!-- -->
+![](Tests_files/figure-gfm/unnamed-chunk-17-1.png)<!-- -->
 
 -   **Dixon&price Function**
 
@@ -878,7 +565,7 @@ ABCoptim_4 <- abc_optim(c(1,2,3), d_and_p, FoodNumber = 50, lb=-10, ub=10, crite
 plot(ABCoptim_4, main="Dixon&Price")
 ```
 
-![](Tests_files/figure-gfm/unnamed-chunk-16-1.png)<!-- -->
+![](Tests_files/figure-gfm/unnamed-chunk-18-1.png)<!-- -->
 
 #### Why ABCoptim ?
 
@@ -1078,8 +765,7 @@ monitor <- function(obj) {
 rbga.results1 = rbga(c(-10, -10), c(10, 10), monitorFunc=monitor, evalFunc=Rosenbrock, mutationChance=0.001)
 ```
 
-![](Tests_files/figure-gfm/unnamed-chunk-23-1.png)<!-- -->![](Tests_files/figure-gfm/unnamed-chunk-23-2.png)<!-- -->![](Tests_files/figure-gfm/unnamed-chunk-23-3.png)<!-- -->![](Tests_files/figure-gfm/unnamed-chunk-23-4.png)<!-- -->![](Tests_files/figure-gfm/unnamed-chunk-23-5.png)<!-- -->![](Tests_files/figure-gfm/unnamed-chunk-23-6.png)<!-- -->![](Tests_files/figure-gfm/unnamed-chunk-23-7.png)<!-- -->![](Tests_files/figure-gfm/unnamed-chunk-23-8.png)<!-- -->![](Tests_files/figure-gfm/unnamed-chunk-23-9.png)<!-- -->![](Tests_files/figure-gfm/unnamed-chunk-23-10.png)<!-- -->![](Tests_files/figure-gfm/unnamed-chunk-23-11.png)<!-- -->
-
+![](Tests_files/figure-gfm/unnamed-chunk-25-1.png)<!-- -->![](Tests_files/figure-gfm/unnamed-chunk-25-2.png)<!-- -->![](Tests_files/figure-gfm/unnamed-chunk-25-3.png)<!-- -->![](Tests_files/figure-gfm/unnamed-chunk-25-4.png)<!-- -->![](Tests_files/figure-gfm/unnamed-chunk-25-5.png)<!-- -->![](Tests_files/figure-gfm/unnamed-chunk-25-6.png)<!-- -->![](Tests_files/figure-gfm/unnamed-chunk-25-7.png)<!-- -->![](Tests_files/figure-gfm/unnamed-chunk-25-8.png)<!-- -->![](Tests_files/figure-gfm/unnamed-chunk-25-9.png)<!-- -->![](Tests_files/figure-gfm/unnamed-chunk-25-10.png)<!-- -->![](Tests_files/figure-gfm/unnamed-chunk-25-11.png)<!-- -->
 #### Why genalg?
 
 -   **genalg** is an optimization package which is based on genetic
@@ -1088,10 +774,10 @@ rbga.results1 = rbga(c(-10, -10), c(10, 10), monitorFunc=monitor, evalFunc=Rosen
     **popSize**, **suggestions** and **iters** according to the need of
     the problem to be optimised.
 
--   **genalg** package has a **plot** function also which can be used to
+-   genalg package has a plot function also which can be used to
     visualize the optimization process.
 
--   In addition to the above specified parameters, **rbga** also allows
+-   In addition to the above specified parameters, rbga also allows
     users to monitor the optimization process as it progresses by
     providing a monitor function to the parameter **monitorFunc**. As in
     the above R code I have provided a monitor function which plots the
@@ -1100,8 +786,67 @@ rbga.results1 = rbga(c(-10, -10), c(10, 10), monitorFunc=monitor, evalFunc=Rosen
 -   Also it can be seen from above plots that optimization using rbga
     function is quite effective. That is the optimized populations were
     obtained within less number of iterations and are accurate also.
-    This is because the parameter **mutationChance** is very low which
+    This is because the parameter mutationChance is very low which
     implies that convergence would be achieved faster.
+
+------------------------------------------------------------------------
+
+### 4. GenSA
+
+``` r
+#loading package GenSA
+require("GenSA")
+```
+
+    ## Loading required package: GenSA
+
+#### Optimising some newly defined complex function( Griewank, Rastrigin) using GenSA package.
+
+``` r
+#using search domains defined over "Go Test Problem" problems list is created to minimise code writing 
+problems <- list( name = c("Griewank", "Rastrigin", "Rosenbrock"), 
+                  functions = c(Griewank, Rastrigin, Rosenbrock), 
+                  lower= c(-600, -5.12, -5), upper=c(600, 5.12, 10) )
+for(i in 1:3){
+  #print the problem name.
+  print((problems$name[[i]]))
+  out<- GenSA( lower = rep(problems$lower[[i]], 4), upper = rep(problems$upper[[i]], 4), 
+               fn = problems$functions[[i]], control=list(max.time=2) ) #max.time is in seconds
+  print(out$value)
+  print(out$par)
+  cat("\n")
+}
+```
+
+    ## [1] "Griewank"
+    ## [1] 0
+    ## [1]  3.638532e-13 -5.664122e-11  5.273073e-11  2.047398e-11
+    ## 
+    ## [1] "Rastrigin"
+    ## [1] 0
+    ## [1]  2.445615e-12  3.154495e-12 -4.343148e-11 -3.512043e-12
+    ## 
+    ## [1] "Rosenbrock"
+    ## [1] 1.823776e-19
+    ## [1] 1 1 1 1
+
+#### Why GenSA?
+
+-   **GenSA** provides **GenSA** function to optimize complex problems
+    such as those having lot of local optimas defined. It is also
+    preferable to use when parameter( provide to the problem to be
+    optimised ) size is large enough.
+
+-   GenSA is able to find the solutions very quickly also like every
+    other solver it provides the **control** argument that can be used
+    to control the optimization process. Users are required to pass a
+    list of of arguments that are **maxit**, **threshold.stop**,
+    **smooth**, **max.time**, etc. to the **control** according to the
+    need of the problem. For example if the problem is simple( like
+    Rosenbrok ) then we can set **max.time**, **maxit** to low values
+    and if we know the optimised value of the problem beforehand and
+    want to find the optimized parameters values then we can set
+    **threshold.stop** to the known value.
 
 ------------------------------------------------------------------------
 
@@ -1122,20 +867,38 @@ volcano<-function(x){
   ans
 }
 
-x <- seq(-50, 50, length = 101)
-y <- seq(-50, 50, length = 101)
+x <- seq(-1, 1, length = 101)
+y <- seq(-1, 1, length = 101)
 X <- as.matrix(expand.grid(x,y))
 colnames(X) <- c("x", "y")
+
+a <- seq(-10, 10, length = 101)
+b <- seq(-10, 10, length = 101)
+I <- as.matrix(expand.grid(a,b))
+colnames(I) <- c("a", "b")
+
 # evaluate function
 z <- volcano(X)
+c <- volcano(I)
 
 df <- data.frame(X, z)
+df1 <- data.frame(I, c)
+
 # plot the function
 library(lattice)
+
+#plot volcano function for first set of data X
 wireframe(z ~ x * y , data=df, main = "Plot of volcano function", shade = TRUE, scales = list(arrows = FALSE), screen = list(z = -50, x = -70))
 ```
 
-![](Tests_files/figure-gfm/unnamed-chunk-24-1.png)<!-- -->
+![](Tests_files/figure-gfm/unnamed-chunk-28-1.png)<!-- -->
+
+``` r
+#plot volcano function for first set of data X1
+wireframe(c ~ a * b , data=df1, main = "Plot of volcano function", shade = TRUE, scales = list(arrows = FALSE), screen = list(z = -50, x = -70))
+```
+
+![](Tests_files/figure-gfm/unnamed-chunk-28-2.png)<!-- -->
 
 #### Trying to Optimise Volcano Function using opm.
 
@@ -1153,21 +916,179 @@ result1
     ## Rvmmin       0.000000e+00  0.000000e+00 -2.013372e+00      1      1           2
     ## BFGS        -1.639873e+00 -8.213043e+00 -8.174490e+01     15      6           0
     ##             kkt1 kkt2 xtime
-    ## L-BFGS-B      NA   NA 0.008
-    ## Nelder-Mead   NA   NA 0.001
+    ## L-BFGS-B      NA   NA 0.001
+    ## Nelder-Mead   NA   NA 0.002
     ## CG            NA   NA 0.004
     ## Rcgmin        NA   NA 0.000
     ## Rvmmin        NA   NA 0.000
-    ## BFGS          NA   NA 0.000
+    ## BFGS          NA   NA 0.001
+
+#### Checking the above obtained results.
+
+The plot displays that volcano function has various crests and troughs
+and it obtains its global minimum value at infinite. Opm solvers are
+giving convergence code as 0. So we will check whether the obtained
+results are actually minima or not using higher derivative test. Which
+says
+  \[ 
+  if  A\ =\ \displaystyle \frac{\partial^2 f}{\partial x^2}(a,b) 
+  \]
+  \[
+  B\ =\ \displaystyle \frac{\partial^2 f}{\partial y\partial x}(a,b)
+  \]
+  \[
+  C\ =\ \displaystyle \frac{\partial^2 f}{\partial y^2}(a,b) 
+  \]
+  \[ then\ for\ (a,b)\ to\ be \ Minima\ A*C-B^2>0 \ and\ A>0 \]
+
+``` r
+#
+volcano.double_diff <- function(x){
+  d<- ((x[1]-1)^2 + (x[2]-5)^2) 
+  A <- -1 - 16*((x[1]-1)^2)*sin(2*d) + 4*cos(2*d)
+  B <- (-16)*(x[1]-1)*(x[2]-5)*sin(2*d)
+  C <- -1 - 16*((x[2]-5)^2)*sin(2*d) + 4*cos(2*d)
+  c(A, B, C)
+}
+for(i in 1:6){
+  
+  #extracting the optimized values of the parameters from opm results.
+  tol <- 1e-3
+  solver <- rownames(result1)[i]
+  a <- result1$p1[[i]]
+  b <- result1$p2[[i]]
+  
+  #evaluating the value of volcano function in the neighborhood of obtained values.
+  value <- volcano(c(a, b))
+  
+  # apply higher derivative test to conclude whether point (a,b) is actually a point of minima
+  dif <- volcano.double_diff(c(a,b))
+  if( dif[1]>0 && (dif[1]*dif[3]-(dif[2]^2)) > 0 ){
+    output <- paste(solver, ": The obtained value=", value," of volcano function at x=", a,
+                    " and y=", b, " is minima")
+    print(output)
+  }
+  else{
+    output <- paste(solver, ": The obtained value=", value," of volcano function at x=", a,
+                    " and y=", b, " is not minima")
+    print(output)
+  } 
+} 
+```
+
+    ## [1] "L-BFGS-B : The obtained value= -9.48827274017103  of volcano function at x= -0.193551837814018  and y= -0.967871449040369  is minima"
+    ## [1] "Nelder-Mead : The obtained value= -3.20508743218824  of volcano function at x= -0.0629706742241979  and y= 0.168458115123212  is minima"
+    ## [1] "CG : The obtained value= -6.73321044952853e+27  of volcano function at x= 38511908010008.8  and y= -109468049404768  is not minima"
+    ## [1] "Rcgmin : The obtained value= -2.01337240795951  of volcano function at x= 0  and y= 0  is not minima"
+    ## [1] "Rvmmin : The obtained value= -2.01337240795951  of volcano function at x= 0  and y= 0  is not minima"
+    ## [1] "BFGS : The obtained value= -81.7449037428911  of volcano function at x= -1.63987282256033  and y= -8.21304323434398  is minima"
+
+-   Higher Derivative test shows that **L-BFGS-b**, **Nelder-Mead**,
+    **BFGS** are obtaining the local minimums of volcano function while
+    **CG**, **Rcgmin**, **Rvmmin** are not. This might be because the
+    solvers uses first order derivatives but first order derivative is
+    sometimes not enough to predict whether the point is maxima, minima
+    or a saddle point for the function.
+
+#### Trying to Optimise Volcano Function using DEoptim
+
+``` r
+set.seed(111)
+result1 <- DEoptim(volcano, lower=c(-10,-10), upper=c(10,10), 
+                   DEoptim.control(NP=20, itermax=50, trace = FALSE))
+plot(result1)
+```
+
+<!-- -->![](Tests_files/figure-gfm/unnamed-chunk-31-2.png)<!-- -->
+
+#### Trying to Optimise Volcano Function using genalg
+
+``` r
+#using rbga function of genalg with monitorFunc as similar defined earlier
+results2 = rbga(c(-10, -10), c(10, 10), monitorFunc=monitor,
+                evalFunc=volcano, mutationChance=0.001, iters=40)
+```
+
+![](Tests_files/figure-gfm/unnamed-chunk-32-1.png)<!-- -->![](Tests_files/figure-gfm/unnamed-chunk-32-2.png)<!-- -->![](Tests_files/figure-gfm/unnamed-chunk-32-3.png)<!-- -->![](Tests_files/figure-gfm/unnamed-chunk-32-4.png)<!-- -->
+
+#### Trying to Optimise Volcano Function using GenSA
+
+``` r
+result3<- GenSA( lower = rep(-10, 2), upper = rep(10, 2), 
+                fn = volcano, control=list(max.time=2) )
+print(result3$value)
+```
+
+    ## [1] -163.4263
+
+``` r
+print(result3$par)
+```
+
+    ## [1] -9.965395 -9.989204
+
+#### Trying to Optimise Volcano Function using Rgenoud
+
+``` r
+result4 <- genoud(fn=volcano, pop.size=2000, nvars=2, wait.generation=20, print.level=0 )
+```
+
+    ## Warning in genoud(fn = volcano, pop.size = 2000, nvars = 2, wait.generation =
+    ## 20, : BFGS hit on best individual produced Out of Boundary individual.
+
+    ## Warning in genoud(fn = volcano, pop.size = 2000, nvars = 2, wait.generation =
+    ## 20, : BFGS hit on best individual produced Out of Boundary individual.
+
+``` r
+result4
+```
+
+    ## $value
+    ## [1] -2.455291e+27
+    ## 
+    ## $par
+    ## [1] -4.949399e+13 -4.960773e+13
+    ## 
+    ## $gradients
+    ## [1] 0 0
+    ## 
+    ## $generations
+    ## [1] 23
+    ## 
+    ## $peakgeneration
+    ## [1] 2
+    ## 
+    ## $popsize
+    ## [1] 2000
+    ## 
+    ## $operators
+    ## [1] 249 250 250 250 250 250 250 250   0
 
 #### Issues while optimizing Volcano function.
 
--   The plot indicates that the function acquires its minimum value at
-    infinite. Optimization of such functions might give wrong solutions
-    as it is giving with different **opm** solvers( although the
-    convergence code is 0 ). Also most of the optimization solvers in R
-    requires boundaries to be defined for the parameters, and for the
-    volcano function choosing a boundary is not much convenient.
+-   The plot indicates that the function has **large number of local
+    minimums** and it acquires its **global minimum value at infinite**.
+    Optimization of such functions might give wrong solutions as it is
+    giving with different **opm** solvers( although the convergence code
+    is 0- reson discussed above ). Also most of the optimization solvers
+    in R requires boundaries to be defined for the parameters, and for
+    the volcano function choosing a boundary is not much convenient.
+
+-   Adding to the boundary point, it is expected that for volcano
+    function the global minimum should occur at the boundary if we
+    provide the boundary to the solvers requiring boundary conditions.
+    Also it is expected from the **solvers based of genetic
+    algorithms**( such as **DEoptim**, **GenSA** and **genalg** ) to
+    obtain the **global optimum** instead of local minimums effectively.
+    And **DEoptim**, **GenSA** and **genalg** are providing the expected
+    results in this case.
+
+-   The solver **genoud** is providing the results out of the boundary.
+    But this is expected as we know that whatever boundary we choose( or
+    default boundary the solver take if not provided ) there always
+    exist values of the function that are less than the values a t
+    boundary outside the boundary. Although we can set the argument
+    **boundary.enforcement** accordingly to avoid such situations.
 
 -   Some of the solvers(**ABCoptim**) tend to assign **NA/NaN** value to
     the parameter “x”(passed to volcano function) during the

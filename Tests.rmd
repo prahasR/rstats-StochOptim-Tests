@@ -21,9 +21,11 @@ Rosenbrock<-function(x){
 #gradient function for Rosenbrock function
 Rosenbrock.g<-function(x){
   len<-length(x)
-  g<-rep(NA, len)
-  g[1]<- 2*(x[1]-1) + 400*x[1]*(x[1]^2-x[2])
-  g[2:(len-1)] <- 2*(x[2:(len-1)]-1) + 400*x[2:(len-1)]*(x[2:(len-1)]^2-x[2:(len-1) + 1]) + 200*(x[2:(len-1)]-x[2:(len-1) - 1]^2)
+  g <- rep(NA, len)
+  g[1] <- 2*(x[1]-1) + 400*x[1]*(x[1]^2-x[2])
+  g[2:(len-1)] <- 2*(x[2:(len-1)]-1) 
+                  + 400*x[2:(len-1)]*(x[2:(len-1)]^2-x[2:(len-1) + 1]) 
+                  + 200*(x[2:(len-1)]-x[2:(len-1) - 1]^2)
   g[len] <- 200 * (x[len] - x[len - 1]^2)
   g
 }
@@ -89,6 +91,31 @@ d_and_p.g<-function(x){
 d_and_p(c(1,2,3,4))
 
 ```
+* **Griewank Function**
+```{r}
+#Griewank Function
+Griewank<- function(x){
+  len <- length(x)
+  sum <- sum(x^2)
+  v <- seq(1, len, length=len)
+  product <- prod(cos(x/sqrt(v)))
+  ans <- ((1/4000)*sum) - product + 1
+  out <- list( val = ans, lower=rep(-600, len), upper=rep(600, len))
+  ans
+}
+Griewank(c(0,0, 0, 0))
+```
+* **Rastrigin Function**
+```{r}
+#Rastrigin Function
+Rastrigin<- function(x){
+  len <- length(x)
+  ans <- 10*len + sum((x)^2 - 10*cos(2*pi*x))
+  out <- list( val = ans, lower=rep(-5.12, len), upper=rep(5.12, len))
+  ans
+}
+Rastrigin(c(1, 1, 1, 1))
+```
 
 
 ## Test 2
@@ -139,6 +166,8 @@ result4
 
 * For simpler problems such as Sphere function, **Nelder-Mead** and **hjn** requires relatively less number of evaluations as compared to Rosenbrock problem but still, the number of evaluations involved is larger than compared to gradient optimization methods for the same problem.
 
+* It should be noted that the gradient we are providing to the solvers are **partial derivatives** of the problem function w.r.t each variable. So if the problem function is f(x, y, z), then gradient vector will be (f'(w.r.t **x**), f'(w.r.t **y**), f'(w.r.t **z**)). So this might not be sufficient for finding the optimum value of a function.
+
 * **CG** method reaches its iteration limit and does not able to find the minimum for the Rosenbrock function. Also it can be seen that this method takes relatively more function and gradient computations compared to other gradient methods.
 
 * **Rvmmin** method achieves better results compared to other methods and for the Rosenbrock problem **Rvmmin** comes up with the best accuracy.
@@ -165,11 +194,13 @@ require(DEoptim)
 ```
 
 #### Optimising above function using DEoptim package.
+
 * **Rosenbrock Function**
 ```{r}
 #Rosenbrock
 set.seed(1231)
-DEoptim_1 <- DEoptim(Rosenbrock, lower=c(-10,-10,-10), upper=c(10,10, 10), DEoptim.control(NP=40))
+DEoptim_1 <- DEoptim(Rosenbrock, lower=c(-10,-10,-10), upper=c(10,10, 10),
+                     DEoptim.control(NP=40, trace = FALSE))
 #plot of the optimization process for rosenbrock function
 plot(DEoptim_1)
 ```
@@ -178,7 +209,8 @@ plot(DEoptim_1)
 ```{r}
 #sphere
 set.seed(1232)
-DEoptim_2 <- DEoptim(sphere, lower=c(-10,-10,-10), upper=c(10,10, 10), DEoptim.control(NP=40, itermax=50))
+DEoptim_2 <- DEoptim(sphere, lower=c(-10,-10,-10), upper=c(10,10, 10),
+                     DEoptim.control(NP=40, itermax=50, trace = FALSE))
 #plot of the optimization process for sphere function
 plot(DEoptim_2)
 ```
@@ -187,7 +219,8 @@ plot(DEoptim_2)
 ```{r}
 #sum square
 set.seed(1233)
-DEoptim_3 <- DEoptim(sum_sq, lower=c(-10,-10,-10), upper=c(10,10, 10), DEoptim.control(NP=40, itermax=50))
+DEoptim_3 <- DEoptim(sum_sq, lower=c(-10,-10,-10), upper=c(10,10, 10),
+                     DEoptim.control(NP=40, itermax=50, trace = FALSE))
 #plot of the optimization process for sum_square function
 plot(DEoptim_3)
 ```
@@ -196,7 +229,8 @@ plot(DEoptim_3)
 ```{r}
 #dixon&price
 set.seed(1234)
-DEoptim_4 <- DEoptim(d_and_p, lower=c(-10,-10,-10), upper=c(10,10, 10), DEoptim.control(NP=40, itermax=50))
+DEoptim_4 <- DEoptim(d_and_p, lower=c(-10,-10,-10), upper=c(10,10, 10),
+                     DEoptim.control(NP=40, itermax=50, trace = FALSE))
 #plot of the optimization process for dixon&price function
 plot(DEoptim_4)
 ```
@@ -219,7 +253,8 @@ plot(DEoptim_4)
 require(ABCoptim)
 ```
 
-####Optimising above function using ABCoptim package.
+#### Optimising above function using ABCoptim package.
+
 * **Rosenbrock Function**
 ```{r}
 #Rosenbrock
@@ -330,18 +365,51 @@ monitor <- function(obj) {
 #Optimising Rosenbrock Function 
 rbga.results1 = rbga(c(-10, -10), c(10, 10), monitorFunc=monitor, evalFunc=Rosenbrock, mutationChance=0.001)
 ```
-
 #### Why genalg?
 
 * **genalg** is an optimization package which is based on genetic algorithm. It provides **rbga** function for the optimization purpose. We can set different parameters such as **mutationChance**, **popSize**, **suggestions** and **iters** according to the need of the problem to be optimised.
 
-* **genalg** package has a **plot** function also which can be used to visualize the optimization process. 
+* genalg package has a plot function also which can be used to visualize the optimization process.
 
-* In addition to the above specified parameters, **rbga** also allows users to monitor the optimization process as it progresses by providing a monitor function to the parameter **monitorFunc**. As in the above R code I have provided a monitor function which plots the population after every (10*x + 1)th iteration of the optimization. 
+* In addition to the above specified parameters, rbga also allows users to monitor the optimization process as it progresses by providing a monitor function to the parameter **monitorFunc**. As in the above R code I have provided a monitor function which plots the population after every (10*x + 1)th iteration of the optimization.
 
-* Also it can be seen from above plots that optimization using rbga function is quite effective. That is the optimized populations were obtained within less number of iterations and are accurate also. This is because the parameter **mutationChance** is very low which implies that convergence would be achieved faster.
+* Also it can be seen from above plots that optimization using rbga function is quite effective. That is the optimized populations were obtained within less number of iterations and are accurate also. This is because the parameter mutationChance is very low which implies that convergence would be achieved faster.
 
 ---
+
+### 4. GenSA
+
+```{r}
+#loading package GenSA
+require("GenSA")
+```
+
+#### Optimising some newly defined complex function( Griewank, Rastrigin) using GenSA package.
+```{r}
+
+#using search domains defined over "Go Test Problem" problems list is created to minimise code writing 
+problems <- list( name = c("Griewank", "Rastrigin", "Rosenbrock"), 
+                  functions = c(Griewank, Rastrigin, Rosenbrock), 
+                  lower= c(-600, -5.12, -5), upper=c(600, 5.12, 10) )
+for(i in 1:3){
+  #print the problem name.
+  print((problems$name[[i]]))
+  out<- GenSA( lower = rep(problems$lower[[i]], 4), upper = rep(problems$upper[[i]], 4), 
+               fn = problems$functions[[i]], control=list(max.time=2) ) #max.time is in seconds
+  print(out$value)
+  print(out$par)
+  cat("\n")
+}
+```
+#### Why GenSA?
+
+* **GenSA** provides **GenSA** function to optimize complex problems such as those having lot of local optimas defined. It is also preferable to use when parameter( provide to the problem to be optimised ) size is large enough.
+
+* GenSA is able to find the solutions very quickly also like every other solver it provides the **control** argument that can be used to control the optimization process. Users are required to pass a list of of arguments that are **maxit**, **threshold.stop**, **smooth**, **max.time**, etc. to the **control** according to the need of the problem. For example if the problem is simple( like Rosenbrok ) then we can set **max.time**, **maxit** to low values and if we know the optimised value of the problem beforehand and want to find the optimized parameters values then we can set **threshold.stop** to the known value.
+
+
+---
+
 
 ## Task5
 
@@ -356,17 +424,31 @@ volcano<-function(x){
   ans
 }
 
-x <- seq(-50, 50, length = 101)
-y <- seq(-50, 50, length = 101)
+x <- seq(-1, 1, length = 101)
+y <- seq(-1, 1, length = 101)
 X <- as.matrix(expand.grid(x,y))
 colnames(X) <- c("x", "y")
+
+a <- seq(-10, 10, length = 101)
+b <- seq(-10, 10, length = 101)
+I <- as.matrix(expand.grid(a,b))
+colnames(I) <- c("a", "b")
+
 # evaluate function
 z <- volcano(X)
+c <- volcano(I)
 
 df <- data.frame(X, z)
+df1 <- data.frame(I, c)
+
 # plot the function
 library(lattice)
+
+#plot volcano function for first set of data X
 wireframe(z ~ x * y , data=df, main = "Plot of volcano function", shade = TRUE, scales = list(arrows = FALSE), screen = list(z = -50, x = -70))
+
+#plot volcano function for first set of data X1
+wireframe(c ~ a * b , data=df1, main = "Plot of volcano function", shade = TRUE, scales = list(arrows = FALSE), screen = list(z = -50, x = -70))
 ```
 
 #### Trying to Optimise Volcano Function using opm.
@@ -376,8 +458,90 @@ result1<-opm(c(0,0), volcano, method=c("L-BFGS-B", "Nelder-Mead", "CG", "Rcgmin"
 result1
 ```
 
+#### Checking the above obtained results.
+
+The plot displays that volcano function has various crests and troughs and it obtains its global minimum value at infinite. Opm solvers are giving convergence code as 0. So we will check whether the obtained results are actually minima or not using higher derivative test. Which says
+  \[ 
+  if  A\ =\ \displaystyle \frac{\partial^2 f}{\partial x^2}(a,b) 
+  \]
+  \[
+  B\ =\ \displaystyle \frac{\partial^2 f}{\partial y\partial x}(a,b)
+  \]
+  \[
+  C\ =\ \displaystyle \frac{\partial^2 f}{\partial y^2}(a,b) 
+  \]
+  \[ then\ for\ (a,b)\ to\ be \ Minima\ A*C-B^2>0 \ and\ A>0 \]
+
+```{r}
+#
+volcano.double_diff <- function(x){
+  d<- ((x[1]-1)^2 + (x[2]-5)^2) 
+  A <- -1 - 16*((x[1]-1)^2)*sin(2*d) + 4*cos(2*d)
+  B <- (-16)*(x[1]-1)*(x[2]-5)*sin(2*d)
+  C <- -1 - 16*((x[2]-5)^2)*sin(2*d) + 4*cos(2*d)
+  c(A, B, C)
+}
+for(i in 1:6){
+  
+  #extracting the optimized values of the parameters from opm results.
+  tol <- 1e-3
+  solver <- rownames(result1)[i]
+  a <- result1$p1[[i]]
+  b <- result1$p2[[i]]
+  
+  #evaluating the value of volcano function in the neighborhood of obtained values.
+  value <- volcano(c(a, b))
+  
+  # apply higher derivative test to conclude whether point (a,b) is actually a point of minima
+  dif <- volcano.double_diff(c(a,b))
+  if( dif[1]>0 && (dif[1]*dif[3]-(dif[2]^2)) > 0 ){
+    output <- paste(solver, ": The obtained value=", value," of volcano function at x=", a,
+                    " and y=", b, " is minima")
+    print(output)
+  }
+  else{
+    output <- paste(solver, ": The obtained value=", value," of volcano function at x=", a,
+                    " and y=", b, " is not minima")
+    print(output)
+  } 
+} 
+```
+
+* Higher Derivative test shows that **L-BFGS-b**, **Nelder-Mead**, **BFGS** are obtaining the local minimums of volcano function while **CG**, **Rcgmin**, **Rvmmin** are not. This might be because the solvers uses first order derivatives but first order derivative is sometimes not enough to predict whether the point is maxima, minima or a saddle point for the function.  
+
+#### Trying to Optimise Volcano Function using DEoptim
+```{r}
+set.seed(111)
+result1 <- DEoptim(volcano, lower=c(-10,-10), upper=c(10,10), 
+                   DEoptim.control(NP=20, itermax=50, trace = FALSE))
+plot(result1)
+```
+#### Trying to Optimise Volcano Function using genalg
+```{r}
+#using rbga function of genalg with monitorFunc as similar defined earlier
+results2 = rbga(c(-10, -10), c(10, 10), monitorFunc=monitor,
+                evalFunc=volcano, mutationChance=0.001, iters=40)
+
+```
+#### Trying to Optimise Volcano Function using GenSA
+```{r}
+result3<- GenSA( lower = rep(-10, 2), upper = rep(10, 2), 
+                fn = volcano, control=list(max.time=2) )
+print(result3$value)
+print(result3$par)
+```
+
+#### Trying to Optimise Volcano Function using Rgenoud
+```{r}
+result4 <- genoud(fn=volcano, pop.size=2000, nvars=2, wait.generation=20, print.level=0 )
+result4
+```
 #### Issues while optimizing Volcano function.
 
-* The plot indicates that the function acquires its minimum value at infinite. Optimization of such functions might give wrong solutions as it is giving with different **opm** solvers( although the convergence code is 0 ). Also most of the optimization solvers in R requires boundaries to be defined for the parameters, and for the volcano function choosing a boundary is not much convenient.
+* The plot indicates that the function has **large number of local minimums** and it acquires its **global minimum value at infinite**. Optimization of such functions might give wrong solutions as it is giving with different **opm** solvers( although the convergence code is 0- reson discussed above ). Also most of the optimization solvers in R requires boundaries to be defined for the parameters, and for the volcano function choosing a boundary is not much convenient.
+
+* Adding to the boundary point, it is expected that for volcano function the  global minimum should occur at the boundary if we provide the boundary to the solvers requiring boundary conditions. Also it is expected from the **solvers based of genetic algorithms**( such as **DEoptim**, **GenSA** and **genalg** ) to obtain the **global optimum** instead of local minimums effectively. And **DEoptim**, **GenSA** and **genalg** are providing the expected results in this case. 
+
+* The solver **genoud** is providing the results out of the boundary. But this is expected as we know that whatever boundary we choose( or default boundary the solver take if not provided ) there always exist values of the function that are less than the values a t boundary outside the boundary. Although we can set the argument **boundary.enforcement** accordingly to avoid such situations.
 
 * Some of the solvers(**ABCoptim**) tend to assign **NA/NaN** value to the parameter "x"(passed to volcano function) during the optimization process which results in **Warning: NA/NaN function evaluation** and they keep on producing the same warning until the iteration limit is reached and in the end they provide a wrong solution.
